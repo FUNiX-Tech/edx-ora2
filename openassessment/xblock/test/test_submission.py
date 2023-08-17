@@ -541,7 +541,7 @@ class SubmissionTest(SubmissionXBlockHandlerTestCase, SubmissionTestMixin):
                 'files_sizes': []
             },
         }
-        with patch('openassessment.fileupload.api.get_download_url') as mock_download_url:
+        with patch('openassessment.data.get_download_url') as mock_download_url:
             # Pretend there are two uploaded files for this XBlock.
             mock_download_url.side_effect = [
                 'download-url-1',
@@ -582,7 +582,7 @@ class SubmissionTest(SubmissionXBlockHandlerTestCase, SubmissionTestMixin):
                 'file_key': 'key-1',
             },
         }
-        with patch('openassessment.fileupload.api.get_download_url') as mock_download_url:
+        with patch('openassessment.data.get_download_url') as mock_download_url:
             # Pretend there are two uploaded files for this XBlock.
             mock_download_url.side_effect = [
                 'download-url-1',
