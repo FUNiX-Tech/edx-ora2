@@ -26,6 +26,7 @@ from openassessment.workflow import (
     api as workflow_api,
     team_api as team_workflow_api
 )
+from openassessment.xblock.apis.submissions import submissions_actions
 from openassessment.xblock.utils.data_conversion import create_submission_dict, prepare_submission_for_serialization
 from openassessment.xblock.openassessmentblock import OpenAssessmentBlock
 from openassessment.xblock.ui_mixins.legacy.submissions.views import get_team_submission_context
@@ -1292,9 +1293,12 @@ class SubmissionRenderTest(SubmissionXBlockHandlerTestCase, SubmissionTestMixin)
         """
         SubmissionTest.setup_mock_team(xblock)
         student_item_dict = xblock.get_student_item_dict()
-        xblock.submission_data.create_team_submission(
+        submissions_actions.create_team_submission(
             student_item_dict,
-            ('A man must have a code', 'A man must have an umbrella too.')
+            ('A man must have a code', 'A man must have an umbrella too.'),
+            xblock.config_data,
+            xblock.submission_data,
+            xblock.workflow_data,
         )
 
         ts = TeamSubmission.objects.all()
@@ -1384,9 +1388,12 @@ class SubmissionRenderTest(SubmissionXBlockHandlerTestCase, SubmissionTestMixin)
         xblock.is_team_assignment = Mock(return_value=True)
 
         student_item_dict = xblock.get_student_item_dict()
-        team_submission = xblock.submission_data.create_team_submission(
+        team_submission = submissions_actions.create_team_submission(
             student_item_dict,
-            ('a man must have a code', 'a man must also have a towel')
+            ('a man must have a code', 'a man must also have a towel'),
+            xblock.config_data,
+            xblock.submission_data,
+            xblock.workflow_data,
         )
 
         workflow = xblock.get_workflow_info()

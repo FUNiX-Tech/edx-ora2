@@ -2,18 +2,25 @@
 Tests for data layer of ORA XBlock
 """
 
+from unittest import TestCase
 from unittest.mock import MagicMock
 
 import ddt
+from openassessment.fileupload.api import FileDescriptor, TeamFileDescriptor
 
 
 from openassessment.xblock.ui_mixins.mfe.serializers import (
     AssessmentStepsSerializer,
+    GetBlockLearnerSubmissionDataSerializer,
+    InProgressResponseSerializer,
     LeaderboardConfigSerializer,
     RubricConfigSerializer,
     SubmissionConfigSerializer,
+    SubmissionSerializer,
+    TeamInfoSerializer,
 )
 from openassessment.xblock.test.base import XBlockHandlerTestCase, scenario
+from openassessment.data import OraSubmissionAnswer, SubmissionFileUpload
 
 
 class TestSubmissionConfigSerializer(XBlockHandlerTestCase):
@@ -439,3 +446,347 @@ class TestLeaderboardConfigSerializer(XBlockHandlerTestCase):
         # Then I get the expected config
         self.assertFalse(leaderboard_config["enabled"])
         self.assertEqual(leaderboard_config["numberOfEntries"], 0)
+
+
+# pylint: disable=abstract-method,super-init-not-called,arguments-differ
+class MockOraSubmissionAnswer(OraSubmissionAnswer):
+    def __init__(self, text_responses, file_uploads):
+        self.text_responses = text_responses
+        self.file_uploads = file_uploads
+
+    def get_text_responses(self):
+        return self.text_responses
+
+    def get_file_uploads(self):
+        return self.file_uploads
+
+
+def _mock_uploaded_file(file_id):
+    return SubmissionFileUpload(
+        file_id,
+        f'name-{file_id}',
+        f'desc-{file_id}',
+        size=file_id,
+        url=f'www.mysite.com/files/{file_id}'
+    )
+
+
+class TestSubmissionSerializer(TestCase):
+    def test_serializer(self):
+        mock_text_responses = ["response to prompt 1", "response to prompt 2"]
+        mock_uploaded_files = [
+            _mock_uploaded_file(file_id) for file_id in [1, 22]
+        ]
+        mock_submission_answer = MockOraSubmissionAnswer(mock_text_responses, mock_uploaded_files)
+        assert SubmissionSerializer(mock_submission_answer).data == {
+            'text_responses': mock_text_responses,
+            'uploaded_files': [
+                {
+                    'file_url': 'www.mysite.com/files/1',
+                    'file_description': 'desc-1',
+                    'file_name': 'name-1',
+                    'file_size': 1,
+                    'file_index': 0
+                },
+                {
+                    'file_url': 'www.mysite.com/files/22',
+                    'file_description': 'desc-22',
+                    'file_name': 'name-22',
+                    'file_size': 22,
+                    'file_index': 1
+                }
+            ]
+        }
+
+    def test_empty(self):
+        mock_submission_answer = MockOraSubmissionAnswer([], [])
+        assert SubmissionSerializer(mock_submission_answer).data == {
+            'text_responses': [],
+            'uploaded_files': []
+        }
+
+
+class TestInProgressResponseSerializer(TestCase):
+    def test_serializer(self):
+        data = {
+            'response': {
+                'answer': {
+                    'parts': [
+                        {
+                            'prompt': 'Prompt 1',
+                            'text': 'Response to prompt 1'
+                        },
+                        {
+                            'prompt': 'Prompt 2',
+                            'text': 'Response to prompt 2'
+                        },
+                    ]
+                }
+            },
+            'file_data': [
+                FileDescriptor('www.mysite.com/files/1', 'desc-1', 'name-1', 1, True)._asdict(),
+                FileDescriptor('www.mysite.com/files/22', 'desc-22', 'name-22', 22, True)._asdict(),
+            ]
+        }
+        assert InProgressResponseSerializer(data).data == {
+            'text_responses': [
+                'Response to prompt 1',
+                'Response to prompt 2'
+            ],
+            'uploaded_files': [
+                {
+                    'file_url': 'www.mysite.com/files/1',
+                    'file_description': 'desc-1',
+                    'file_name': 'name-1',
+                    'file_size': 1,
+                    'file_index': 0
+                },
+                {
+                    'file_url': 'www.mysite.com/files/22',
+                    'file_description': 'desc-22',
+                    'file_name': 'name-22',
+                    'file_size': 22,
+                    'file_index': 1
+                }
+            ]
+        }
+
+    def test_empty(self):
+        data = {
+            'response': {
+                'answer': {
+                    'parts': [
+                        {
+                            'prompt': 'Prompt 1',
+                            'text': ''
+                        },
+                        {
+                            'prompt': 'Prompt 2',
+                            'text': ''
+                        },
+                    ]
+                }
+            },
+            'file_data': []
+        }
+        assert InProgressResponseSerializer(data).data == {
+            'text_responses': ['', ''],
+            'uploaded_files': [],
+        }
+
+
+class TestTeamInfoSerializer(TestCase):
+    def test_serialize(self):
+        team_info = {
+            'team_name': 'Team1',
+            'team_usernames': ['Bob', 'Alice'],
+            'previous_team_name': 'Team4',
+            'has_submitted': True,
+            'team_uploaded_files': [
+                TeamFileDescriptor('www.mysite.com/files/123', 'desc-123', 'name-123', 123, 'Chrissy')._asdict(),
+                TeamFileDescriptor('www.mysite.com/files/5555', 'desc-5555', 'name-5555', 5555, 'Billy')._asdict(),
+            ]
+        }
+        assert TeamInfoSerializer(team_info).data == {
+            'team_name': 'Team1',
+            'team_usernames': ['Bob', 'Alice'],
+            'previous_team_name': 'Team4',
+            'has_submitted': True,
+            'team_uploaded_files': [
+                {
+                    'file_url': 'www.mysite.com/files/123',
+                    'file_description': 'desc-123',
+                    'file_name': 'name-123',
+                    'file_size': 123,
+                    'uploaded_by': 'Chrissy'
+                },
+                {
+                    'file_url': 'www.mysite.com/files/5555',
+                    'file_description': 'desc-5555',
+                    'file_name': 'name-5555',
+                    'file_size': 5555,
+                    'uploaded_by': 'Billy'
+                }
+            ]
+        }
+
+    def test_no_team(self):
+        team_info = {
+            'team_uploaded_files': []
+        }
+        assert not TeamInfoSerializer(team_info).data
+
+    def test_empty(self):
+        team_info = {
+            'team_name': 'Team1',
+            'team_usernames': ['Bob', 'Alice'],
+            'previous_team_name': None,
+            'has_submitted': False,
+            'team_uploaded_files': []
+        }
+        assert TeamInfoSerializer(team_info).data == team_info
+
+
+@ddt.ddt
+class TestGetBlockLearnerSubmissionDataSerializer(TestCase):
+
+    def test_integration_not_submitted(self):
+        data = {
+            'workflow': {
+                'has_submitted': False,
+                'has_cancelled': False,
+                'has_recieved_grade': False,
+            },
+            'team_info': {
+                'team_name': 'Team1',
+                'team_usernames': ['Bob', 'Alice'],
+                'previous_team_name': None,
+                'has_submitted': False,
+                'team_uploaded_files': [
+                    TeamFileDescriptor('www.mysite.com/files/123', 'desc-123', 'name-123', 123, 'Bob')._asdict(),
+                    TeamFileDescriptor('www.mysite.com/files/5555', 'desc-5555', 'name-5555', 5555, 'Billy')._asdict(),
+                ]
+            },
+            'response': {
+                'answer': {
+                    'parts': [
+                        {
+                            'prompt': 'Prompt 1',
+                            'text': 'Response to prompt 1'
+                        },
+                        {
+                            'prompt': 'Prompt 2',
+                            'text': 'Response to prompt 2'
+                        },
+                    ]
+                }
+            },
+            'file_data': [
+                FileDescriptor('www.mysite.com/files/1', 'desc-1', 'name-1', 1, True)._asdict(),
+                FileDescriptor('www.mysite.com/files/22', 'desc-22', 'name-22', 22, True)._asdict(),
+            ]
+        }
+        assert GetBlockLearnerSubmissionDataSerializer(data).data == {
+            'has_submitted': False,
+            'has_cancelled': False,
+            'has_recieved_grade': False,
+            'team_info': {
+                'team_name': 'Team1',
+                'team_usernames': ['Bob', 'Alice'],
+                'previous_team_name': None,
+                'has_submitted': False,
+                'team_uploaded_files': [
+                    {
+                        'file_url': 'www.mysite.com/files/123',
+                        'file_description': 'desc-123',
+                        'file_name': 'name-123',
+                        'file_size': 123,
+                        'uploaded_by': 'Bob'
+                    },
+                    {
+                        'file_url': 'www.mysite.com/files/5555',
+                        'file_description': 'desc-5555',
+                        'file_name': 'name-5555',
+                        'file_size': 5555,
+                        'uploaded_by': 'Billy'
+                    }
+                ]
+            },
+            'response': {
+                'text_responses': [
+                    'Response to prompt 1',
+                    'Response to prompt 2'
+                ],
+                'uploaded_files': [
+                    {
+                        'file_url': 'www.mysite.com/files/1',
+                        'file_description': 'desc-1',
+                        'file_name': 'name-1',
+                        'file_size': 1,
+                        'file_index': 0
+                    },
+                    {
+                        'file_url': 'www.mysite.com/files/22',
+                        'file_description': 'desc-22',
+                        'file_name': 'name-22',
+                        'file_size': 22,
+                        'file_index': 1
+                    }
+                ]
+            }
+        }
+
+    def test_integration_submitted(self):
+        data = {
+            'workflow': {
+                'has_submitted': True,
+                'has_cancelled': False,
+                'has_recieved_grade': True,
+            },
+            'team_info': {
+                'team_name': 'Team1',
+                'team_usernames': ['Bob', 'Alice'],
+                'previous_team_name': None,
+                'has_submitted': True,
+            },
+            'response': MockOraSubmissionAnswer(
+                [
+                    'Response to prompt 1',
+                    'Response to prompt 2'
+                ],
+                [
+                    _mock_uploaded_file(1),
+                    _mock_uploaded_file(22),
+                    _mock_uploaded_file(123),
+                    _mock_uploaded_file(5555),
+                ]
+            ),
+            'file_data': []
+        }
+        assert GetBlockLearnerSubmissionDataSerializer(data).data == {
+            'has_submitted': True,
+            'has_cancelled': False,
+            'has_recieved_grade': True,
+            'team_info': {
+                'team_name': 'Team1',
+                'team_usernames': ['Bob', 'Alice'],
+                'previous_team_name': None,
+                'has_submitted': True,
+            },
+            'response': {
+                'text_responses': [
+                    'Response to prompt 1',
+                    'Response to prompt 2'
+                ],
+                'uploaded_files': [
+                    {
+                        'file_url': 'www.mysite.com/files/1',
+                        'file_description': 'desc-1',
+                        'file_name': 'name-1',
+                        'file_size': 1,
+                        'file_index': 0
+                    },
+                    {
+                        'file_url': 'www.mysite.com/files/22',
+                        'file_description': 'desc-22',
+                        'file_name': 'name-22',
+                        'file_size': 22,
+                        'file_index': 1
+                    },
+                    {
+                        'file_url': 'www.mysite.com/files/123',
+                        'file_description': 'desc-123',
+                        'file_name': 'name-123',
+                        'file_size': 123,
+                        'file_index': 2
+                    },
+                    {
+                        'file_url': 'www.mysite.com/files/5555',
+                        'file_description': 'desc-5555',
+                        'file_name': 'name-5555',
+                        'file_size': 5555,
+                        'file_index': 3
+                    }
+                ]
+            }
+        }

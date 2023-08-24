@@ -13,6 +13,7 @@ from rest_framework.serializers import (
     CharField,
     ListField,
     SerializerMethodField,
+    URLField,
 )
 
 
@@ -223,3 +224,87 @@ class OraBlockInfoSerializer(Serializer):
 
     def get_prompts(self, block):
         return [prompt["description"] for prompt in block.prompts]
+
+
+class FileIndexListField(ListField):
+    def to_representation(self, data):
+        return [
+            self.child.to_representation({'item': item, 'file_index': i}) if item is not None else None
+            for i, item in enumerate(data)
+        ]
+
+
+class SubmissionFileSerializer(Serializer):
+    file_url = URLField(source='item.url')
+    file_description = CharField(source='item.description')
+    file_name = CharField(source='item.name')
+    file_size = IntegerField(source='item.size')
+    file_index = IntegerField()
+
+
+class SubmissionSerializer(Serializer):
+    text_responses = CharListField(allow_empty=True, source='get_text_responses')
+    uploaded_files = FileIndexListField(
+        allow_empty=True,
+        source='get_file_uploads',
+        child=SubmissionFileSerializer()
+    )
+
+
+class FileDescriptorSerializer(Serializer):
+    file_url = URLField(source='item.download_url')
+    file_description = CharField(source='item.description')
+    file_name = CharField(source='item.name')
+    file_size = IntegerField(source='item.size')
+    file_index = IntegerField()
+
+
+class InProgressResponseSerializer(Serializer):
+    text_responses = SerializerMethodField()
+    uploaded_files = FileIndexListField(
+        allow_empty=True,
+        source='file_data',
+        child=FileDescriptorSerializer()
+    )
+
+    def get_text_responses(self, data):
+        return [
+            part['text']
+            for part in data['response']['answer']['parts']
+        ]
+
+
+class TeamFileDescriptorSerializer(Serializer):
+    file_url = URLField(source='download_url')
+    file_description = CharField(source='description')
+    file_name = CharField(source='name')
+    file_size = IntegerField(source='size')
+    uploaded_by = CharField()
+
+
+class TeamInfoSerializer(Serializer):
+    team_name = CharField()
+    team_usernames = CharListField()
+    previous_team_name = CharField(allow_null=True)
+    has_submitted = BooleanField()
+    team_uploaded_files = ListField(allow_empty=True, child=TeamFileDescriptorSerializer(), required=False)
+
+    def to_representation(self, instance):
+        # If there's no team name, there's no team info to show
+        if 'team_name' not in instance:
+            return {}
+        return super().to_representation(instance)
+
+
+class GetBlockLearnerSubmissionDataSerializer(Serializer):
+    has_submitted = BooleanField(source="workflow.has_submitted")
+    has_cancelled = BooleanField(source="workflow.has_cancelled", default=False)
+    has_recieved_grade = BooleanField(source="workflow.has_recieved_grade", default=False)
+    team_info = TeamInfoSerializer()
+    response = SerializerMethodField(source="*")
+
+    def get_response(self, data):
+        # The data is different if we have an in-progress response vs a submitted response
+        if data['workflow']['has_submitted']:
+            return SubmissionSerializer(data['response']).data
+        return InProgressResponseSerializer(data).data
