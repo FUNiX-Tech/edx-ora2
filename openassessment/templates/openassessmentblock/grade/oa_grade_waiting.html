@@ -1,20 +1,23 @@
-{% load i18n %}
+{% comment %} {% load i18n %}
 {% spaceless %}
-<li id="openassessment__grade__{{ xblock_id }}" class="openassessment__steps__step step--grade is--showing {{ is_waiting_staff }} ui-slidable__container" tabindex="-1">
-    <header class="step__header ui-slidable__control">
-        <span>
-            <button class="ui-slidable" aria-expanded="false" id="oa_grade_{{ xblock_id }}" aria-controls="oa_grade_{{ xblock_id }}_content" aria-labeledby="oa_step_title_grade">
-                <span class="icon fa fa-caret-right" aria-hidden="false"/>
-            </button>
+<li style="border: none; padding: 0;" id="openassessment__grade__{{ xblock_id }}" class="openassessment__steps__step step--grade is--showing {{ is_waiting_staff }}" tabindex="-1">
+    <header  class="step__header">
+        <span >
+            <span class="ui-slidable#" aria-expanded="false" id="oa_grade_{{ xblock_id }}" aria-controls="oa_grade_{{ xblock_id }}_content" aria-labeledby="oa_step_title_grade">
+               <span class="icon fa fa-caret-right" aria-hidden="false"/> 
+            </span>
         </span>
 
         <span>
             <h4 class="step__title">
                 <span class="wrapper--copy">
-                    <span id="oa_step_title_grade" class="step__label">{% trans "Your Grade" %}: </span>
-                    <span class="grade__value">
-                        <span class="grade__value__title">{% trans "Waiting for Assessments" %}</span>
+                    <span id="oa_step_title_grade" class="step__label">
+                       {% trans "Your Grade" %}:  
+                        Submission Results
                     </span>
+                   <span class="grade__value">
+                        <span class="grade__value__title">{% trans "Waiting for Assessments" %}</span>
+                    </span> 
                 </span>
             </h4>
         </span>
@@ -23,17 +26,25 @@
     <div class="ui-slidable__content" aria-labelledby="oa_grade_{{ xblock_id }}" id="oa_grade_{{ xblock_id }}_content">
         <div class="wrapper--step__content">
             <div class="step__content">
-                {% if score_explanation %}
+               {% if score_explanation %}
                 <div class="step__message message message--waiting">
                     <h5 class="message__title">{% trans "Status" %}</h5>
                     <div class="message__content">{{ score_explanation }}</div>
                 </div>
-                {% endif %}
-                <div class="grade__value__description">
+                {% endif %} 
+               <div class="grade__value__description">
                     <p>{% trans "You have completed your steps in the assignment, but some assessments still need to be done on your response. When the assessments of your response are complete, you will see feedback from everyone who assessed your response, and you will receive your final grade." %}</p>
-                </div>
+                </div> 
+
+              
             </div>
         </div>
+
+        <p style="border: 1px solid blue; padding: 10px 20px;">
+            Submission In Review
+        </p>
     </div>
+
+
 </li>
-{% endspaceless %}
+{% endspaceless %} {% endcomment %}

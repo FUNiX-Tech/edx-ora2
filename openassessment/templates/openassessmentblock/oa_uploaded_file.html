@@ -11,15 +11,15 @@
     {% endif %}
 
     <div class="{{ class_prefix }}__display__file {% if not file_urls %}is--hidden{% endif %} submission__{{ file_upload_type }}__upload" data-upload-type="{{ file_upload_type }}">
-        {% if file_urls %}
+        {% if file_urls and true %}
           <h5 class="submission__answer__part__text__title">
             {% trans "Files that were uploaded by you:" %}
           </h5>
         {% endif %}
         <div class="submission__answer__files">
         {% for file in file_urls %}
+        {% if file.download_url %}
             <div class="submission__answer__file__block submission__answer__file__block__{{ forloop.counter0 }}" {% if not file.download_url %} deleted {% endif %}>
-            {% if file.download_url %}
                 {% if file_upload_type == "image" %}
                     {% if file.description %}
                     <div class="submission__file__description__label" id="file_description_{{ xblock_id }}_{{ including_template }}_{{ forloop.counter0 }}">{{ file.description }}:</div>
@@ -27,12 +27,18 @@
                     <div><img class="submission__answer__file submission--image" src="{{ file.download_url }}"
                             aria-labelledby="file_description_{{ xblock_id }}_{{ including_template }}_{{ forloop.counter0 }}" /></div>
                 {% elif file_upload_type == "pdf-and-image" or file_upload_type == "custom" %}
+
                     <a href="{{ file.download_url }}" class="submission__answer__file submission--file" target="_blank">
-                        {% if file.description %}
-                        {{ file.description }} ( {{file.name}} )
-                        {% else %}
-                        {% trans "View the files associated with this submission:" %} #{{ forloop.counter }}
-                        {% endif %}
+                       <span class="download-url-normal">
+                            {% if file.description %}
+                            {{ file.description }} ( {{file.name}} )
+                            {% else %}
+                            {% trans "View the files associated with this submission:" %} #{{ forloop.counter }}
+                            {% endif %}
+                        </span>
+                        <span class="download-url-inreview">
+                            Download Submission
+                        </span>
                     </a>
                 {% endif %}
                 {% if enable_delete_files and file.show_delete_button %}
@@ -40,8 +46,8 @@
                         Delete File
                     </button>
                 {% endif %}
-            {% endif %}
             </div>
+            {% endif %}
         {% endfor %}
         </div>
         {% if show_warning %}

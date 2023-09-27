@@ -1,12 +1,12 @@
 {% load tz %}
 {% load i18n %}
 {% spaceless %}
-{% block list_item %}
-<li class="openassessment__steps__step step--response is--in-progress is--showing ui-slidable__container"
-    tabindex="-1">
-{% endblock %}
 
-    <header class="step__header ui-slidable__control">
+  {% block list_item %}
+    <li style="padding: 0; border: none; box-shadow: none;"   class="openassessment__steps__step step--response is--in-progress is--showing" tabindex="-1">
+  {% endblock %}
+
+    {% comment %} <header class="step__header ui-slidable__control" >
         <span>
             {% block button %}
                 <button class="ui-slidable" aria-expanded="true" id="oa_response_{{ xblock_id }}" aria-controls="oa_response_{{ xblock_id }}_content" aria-labeledby="oa_step_title_response">
@@ -55,12 +55,42 @@
             </span>
         </span>
         {% endblock %}
-    </header>
+    </header> {% endcomment %}
+
+    <header class="step__header" style="margin-bottom: 60px !important;">
+      {% if submission_start %}
+      <span class="step__deadline">
+          {# Translators: This string displays a date to the user, then tells them the time until that date.  Example: "available August 13th, 2014 (in 5 days and 45 minutes)" #}
+          {% blocktrans with start_date=submission_start|timezone:"UTC"|date:"c" time_until=submission_start|timeuntil %}
+          <span id="oa_step_deadline_response" class="date ora-datetime" data-datetime="{{ start_date }}" data-string="available {date} (in {{ time_until }})" data-timezone="{{ user_timezone }}" data-language="{{ user_language }}"></span>
+          {% endblocktrans %}
+      </span>
+      {% elif submission_due %}
+      <span style="font-size: 13px; display: inline-block; margin: -5px 0  0; border: 1px solid #222222; border-radius: 999px; padding: 5px 10px; background: #eef0f5;" class="step__deadline">
+          {# Translators: This string displays a date to the user, then tells them the time until that date.  Example: "due August 13th, 2014 (in 5 days and 45 minutes)" #}
+          {% blocktrans with due_date=submission_due|timezone:"UTC"|date:"c" time_until=submission_due|timeuntil %}
+          <span id="oa_step_deadline_response" class="date ora-datetime" data-datetime="{{ due_date }}" data-string="due {date} (in {{ time_until }})" data-timezone="{{ user_timezone }}" data-language="{{ user_language }}"></span>
+          {% endblocktrans %}
+      </span>
+      {% endif %}
+
+      
+      {% comment %} {%  block title %}
+      <span class="step__status">
+          <span id="oa_step_status_response" class="step__status__value">
+              <span class="copy">{% trans "In Progress" %}</span>
+          </span>
+      </span>
+      {% endblock %} {% endcomment %}
+  </header>
+
 
     {% block body %}
     <div class="ui-slidable__content" aria-labelledby="oa_response_{{ xblock_id }}" id="oa_response_{{ xblock_id }}_content">
         <div class="wrapper--step__content">
-            <div class="step__instruction">
+          
+          {% comment %}
+          <div class="step__instruction">
                 <p>
                   {% if team_name %}
                     {% trans "Enter your team's response to the prompt." %}
@@ -111,6 +141,8 @@
                   {% endif %}
                 </p>
             </div>
+          {% endcomment %}
+
             {% if show_rubric_during_response %}
                 <div class="step__rubric">
                     <div class="rubric_display_container ui-slidable__container is--initially--collapsed" id="read_only_rubric_container">
@@ -126,21 +158,24 @@
                     </div>
                 </div>
             {% endif %}
+
             <div class="step__content" data-base-asset-url="{{ base_asset_url }}">
-                <form class="response__submission">
+                <form id="upload-file-form" style="background: transparent;" class="response__submission" >
                     <ol class="list list--fields response__submission__content">
                         {% for part in saved_response.answer.parts %}
                             <li class="submission__answer__part">
+                                {% comment %}
                                 <h5 class="submission__answer__part__text__title">{% trans "The prompt for this section" %}</h5>
                                 <article class="submission__answer__part__prompt">
-                                    <div class="submission__answer__part__prompt__copy">
-                                        {% if prompts_type == 'html' %}
-                                            {{ part.prompt.description|safe }}
-                                        {% else %}
-                                            {{ part.prompt.description|linebreaks }}
-                                        {% endif %}
-                                    </div>
+                                  <div class="submission__answer__part__prompt__copy">
+                                    {% if prompts_type == 'html' %}
+                                    {{ part.prompt.description|safe }}
+                                    {% else %}
+                                    {{ part.prompt.description|linebreaks }}
+                                    {% endif %}
+                                  </div>
                                 </article>
+                                {% endcomment %}
 
 
                                 {% if team_name %}
@@ -170,7 +205,10 @@
                                           {% if team_name %}
                                             {% trans "Team Response " %}
                                           {% else %}
+                                            {% comment %}
                                             {% trans "Your Response " %}
+                                            {% endcomment %}
+                                            Submission Details
                                           {% endif %}
 
                                           {% if text_response == "required" %}
@@ -189,12 +227,14 @@
                                           {% endblocktrans %}
                                         {% endif %}
                                     </div>
+                                    <span style="font-size: 13px;">{% trans "Are there any areas you would like your reviewer to pay particular attention to?" %}</span>
+
                                     <textarea
                                         id="submission__answer__part__text__{{ forloop.counter }}__{{ xblock_id }}"
                                         class="submission__answer__part__text__value"
                                         data-preview="submission__{{ forloop.counter }}"
                                         aria-labelledby="submission__answer__part__text__title__{{ forloop.counter }}__{{ xblock_id }}"
-                                        placeholder="{% trans "Enter your response to the prompt above." %}"
+                                        {% comment %} placeholder="{% trans "Enter your response to the prompt above." %}" {% endcomment %}
                                         maxlength="100000"
                                     >{{ part.text }}</textarea>
                                 </div>
@@ -225,7 +265,7 @@
                                       <div class="message__content"></div>
                                   </div>
 
-                                  <ul class="list list--actions">
+                                  {% comment %} <ul class="list list--actions">
                                       <li class="list--actions__item">
                                           <div id="response__save_status__{{ xblock_id }}" class="response__submission__label">
                                               <span class="save__submission__icon icon fa fa-circle-o" aria-hidden="true"></span>
@@ -233,7 +273,7 @@
                                               <span class="save__submission__label">{{ save_status }}</span>
                                           </div>
                                       </li>
-                                  </ul>
+                                  </ul> {% endcomment %}
                               </div>
                           </li>
                           {% endif %}
@@ -256,7 +296,7 @@
                               {% endblocktrans %}
                             {% endif %}
                             <li class="field">
-                                <div class="upload__error">
+                                {% comment %} <div class="upload__error">
                                     <div class="message message--inline message--error message--error-server" tabindex="-1">
                                         <h5 class="message__title">{% trans "We could not upload files" %}</h5>
                                         <div class="message__content"></div>
@@ -267,7 +307,7 @@
                                         <h5 class="message__title">{% trans "We could not delete files" %}</h5>
                                         <div class="message__content"></div>
                                     </div>
-                                </div>
+                                </div> {% endcomment %}
 
                                 <label class="sr" for="submission_answer_upload_{{ xblock_id }}">
                                   {% if allow_multiple_files %}
@@ -276,29 +316,83 @@
                                       {% trans "Select a file to upload for this submission." %}
                                   {% endif %}
                                 </label>
-                                <div>
+
+                                {% comment %} <div>
                                   {% trans "Supported file types: " %}{{ white_listed_file_types|join:", "}}
-                                </div>
-                                <input type="file" class="submission__answer__upload file--upload" id="submission_answer_upload_{{ xblock_id }}" {% if allow_multiple_files %}multiple=""{% endif %} accept="{{white_listed_file_types|join:", "}}">
-                                <button type="submit" class="file__upload action action--upload">
-                                  {% if allow_multiple_files %}
-                                      {% trans "Upload files" %}
-                                  {% else %}
-                                      {% trans "Upload file" %}
-                                  {% endif %}
-                                </button>
+                                </div> {% endcomment %}
+
+                                {% comment %} ################ Choose file button ####################  {% endcomment %}
+                                <style>
+                                  #choose-file-btn {
+                                    font-weight: 600; 
+                                    color: #065683; 
+                                    margin: 5px 0 0 0; 
+                                    padding: 0 40px; 
+                                    position: static; 
+                                    width: auto; 
+                                    height: 40px; 
+                                    border: 1px solid #065683; 
+                                    border-radius: 4px; 
+                                    display: flex; 
+                                    align-items: center; 
+                                    justify-content: center;
+                                    transition: .2s;
+                                  }
+
+                                  #choose-file-btn:hover {
+                                    background: rgb(0, 117, 180);
+                                    color: white;
+                                  }
+                                </style>
+                                <div style="height: 60px; display: flex; ">
+                                  <label id="choose-file-btn">
+                                    Choose File
+                                    <input style="width: 0; height: 0; overflow: hidden; display: block;" type="file" class="submission__answer__upload file--upload" id="submission_answer_upload_{{ xblock_id }}" {% if allow_multiple_files %}multiple=""{% endif %} accept="{{white_listed_file_types|join:", "}}">
+                                  </label>  
+                                </div> 
+
+                                {% comment %} ################ file desc ####################  {% endcomment %}
                                 <div class="files__descriptions"></div>
+
+                                <div >
+                                  <button style="float: none;" type="submit" class="file__upload action action--upload">
+                                    {% if allow_multiple_files %}
+                                        {% trans "Upload files" %}
+                                    {% else %}
+                                        {% trans "Upload file" %}
+                                    {% endif %}
+                                  </button>
+                                </div>
+
+
                             </li>
+
+                            <div class="upload__error">
+                              <div class="message message--inline message--error message--error-server" tabindex="-1">
+                                  <h5 class="message__title">{% trans "We could not upload files" %}</h5>
+                                  <div class="message__content"></div>
+                              </div>
+                            </div>
+                            <div class="delete__error">
+                                <div class="message message--inline message--error message--error-server" tabindex="-1">
+                                    <h5 class="message__title">{% trans "We could not delete files" %}</h5>
+                                    <div class="message__content"></div>
+                                </div>
+                            </div>
                           {% endif %}
+
                           <li class="field">
-                          {% include "openassessmentblock/oa_uploaded_file.html" with file_upload_type=file_upload_type file_urls=file_urls class_prefix="submission__answer" including_template="response" xblock_id=xblock_id %}
+                            {% include "openassessmentblock/oa_uploaded_file.html" with file_upload_type=file_upload_type file_urls=file_urls class_prefix="submission__answer" including_template="response" xblock_id=xblock_id %}
                           </li>
+                          {% comment %}                           
                           <li class="field">
                             {% include "openassessmentblock/oa_team_uploaded_files.html" with file_upload_type=file_upload_type team_file_urls=team_file_urls class_prefix="submission__team__answer" including_template="response" xblock_id=xblock_id %}
-                          </li>
+                          </li> {% endcomment %}
                       </ol>
                   </form>
               </div>
+
+
               {% if team_name %}
                 <div id='team_concurrency_notice'>
                   {% trans "This is a team submission." %}
@@ -317,23 +411,27 @@
                 </div>
               {% endif %}
 
-              <div class="step__actions">
+              <div class="step__actions" >
                 <div class="message message--inline message--error message--error-server" tabindex="-1">
                     <h5 class="message__title">{% trans "We could not submit your response" %}</h5>
                     <div class="message__content"></div>
                 </div>
 
                 <ul class="list list--actions">
-                    <li class="list--actions__item">
+                    <li style="border: none;" class="list--actions__item">
                         <button type="submit" class="action action--submit step--response__submit"
                                 text_response="{{text_response}}"
                                 file_upload_response="{{file_upload_response}}"
                                 >
-                            {% trans "Submit your response and move to the next step" %}
+                            {% comment %}{% trans "Submit your response and move to the next step" %}{% endcomment %}
+                            {% trans "Submit" %}
                         </button>
                     </li>
                 </ul>
             </div>
+
+
+
             <div class="step--response__dialog-confirm dialog-confirm">
               <p class="dialog-text"></p>
             </div>
@@ -341,5 +439,7 @@
         </div>
     </div>
     {% endblock %}
-</li>
+  </li>
 {% endspaceless %}
+
+

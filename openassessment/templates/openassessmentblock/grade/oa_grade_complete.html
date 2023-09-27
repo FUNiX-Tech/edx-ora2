@@ -1,13 +1,7 @@
 {% load i18n %}
 {% spaceless %}
-    <li id="openassessment__grade__{{ xblock_id }}" class="openassessment__steps__step step--grade is--complete is--showing has--grade ui-slidable__container {% if allow_latex %}allow--latex{% endif %}" tabindex="-1">
+    <li id="openassessment__grade__{{ xblock_id }}" class="openassessment__steps__step step--grade is--complete is--showing has--grade {% if allow_latex %}allow--latex{% endif %}" tabindex="-1">
         <header class="step__header ui-slidable__control">
-            <span>
-                <button class="ui-slidable" aria-expanded="true" id="oa_grade_{{ xblock_id }}" aria-controls="oa_grade_{{ xblock_id }}_content" aria-labeledby="oa_step_title_grade">
-                    <span class="icon fa fa-caret-right" aria-hidden="false"/>
-                </button>
-            </span>
-
             <span>
                 <h4 class="step__title">
                     <span class="wrapper--copy">
@@ -35,21 +29,23 @@
                 <div class="step__content">
                     <article class="submission__answer__display step__content__section">
 
-                        {% trans "Your Response" as translated_label %}
-                        {% include "openassessmentblock/oa_submission_answer.html" with answer=student_submission.answer answer_text_label=translated_label %}
+                        {% comment %} {% trans "Your Response" as translated_label %}
+                        {% include "openassessmentblock/oa_submission_answer.html" with answer=student_submission.answer answer_text_label=translated_label %} {% endcomment %}
 
-                        {% trans "Your Upload" as translated_header %}
+                        {% comment %} {% trans "Your Upload" as translated_header %} {% endcomment %}
+                        <div id="submission-in-review">
                         {% include "openassessmentblock/oa_uploaded_file.html" with file_upload_type=file_upload_type file_urls=file_urls header=translated_header class_prefix="submission__answer" including_template="grade_complete" xblock_id=xblock_id %}
+                        </div>
                     </article>
 
                     <article class="submission__peer-evaluations step__content__section">
                         <h5 class="submission__peer-evaluations__title">{% trans "Assessments of Your Response" %}</h5>
                         
-                        <hr>
+                        {% comment %} <hr>
                         <div class="step__message message message--complete">
                             <h5 class="message__title">{% trans "Status" %}</h5>
                             <div class="message__content">{{ score_explanation }}</div>
-                        </div>
+                        </div> {% endcomment %}
 
                         <ol class="list submission__peer-evaluations__questions">
                             {% for criterion in grade_details.criteria %}
