@@ -277,85 +277,105 @@
                               </div>
                           </li>
                           {% endif %}
-                          {% if text_response and file_upload_type %}
+
                             <hr/>
-                          {% endif %}
+                          
                           {% if file_upload_type %}
-                            <h5 class="submission__upload__files__title">
-                              {% trans "File Uploads " %}
-                              {% if file_upload_response == "required" %}
-                                {% trans "(Required)" %}
-                              {% elif file_upload_response == "optional" %}
-                                {% trans "(Optional)" %}
-                              {% endif %}
-                            </h5>
-                            {% if team_name %}
-                              {% blocktrans %}
-                                  Upload files and review files uploaded by you and your teammates below. Be sure to add
-                                  descriptions to your files to help your teammates identify them.
-                              {% endblocktrans %}
-                            {% endif %}
                             <li class="field">
-                                {% comment %} <div class="upload__error">
+                               {% comment %} <div class="upload__error">
                                     <div class="message message--inline message--error message--error-server" tabindex="-1">
                                         <h5 class="message__title">{% trans "We could not upload files" %}</h5>
                                         <div class="message__content"></div>
                                     </div>
-                                </div>
+                                </div> {% endcomment %}
                                 <div class="delete__error">
                                     <div class="message message--inline message--error message--error-server" tabindex="-1">
                                         <h5 class="message__title">{% trans "We could not delete files" %}</h5>
                                         <div class="message__content"></div>
                                     </div>
-                                </div> {% endcomment %}
+                                </div> 
 
-                                <label class="sr" for="submission_answer_upload_{{ xblock_id }}">
-                                  {% if allow_multiple_files %}
-                                      {% trans "Select one or more files to upload for this submission." %}
-                                  {% else %}
-                                      {% trans "Select a file to upload for this submission." %}
-                                  {% endif %}
-                                </label>
-
-                                {% comment %} <div>
-                                  {% trans "Supported file types: " %}{{ white_listed_file_types|join:", "}}
-                                </div> {% endcomment %}
-
-                                {% comment %} ################ Choose file button ####################  {% endcomment %}
                                 <style>
-                                  #choose-file-btn {
-                                    font-weight: 600; 
-                                    color: #065683; 
-                                    margin: 5px 0 0 0; 
-                                    padding: 0 40px; 
-                                    position: static; 
-                                    width: auto; 
-                                    height: 40px; 
-                                    border: 1px solid #065683; 
-                                    border-radius: 4px; 
-                                    display: flex; 
-                                    align-items: center; 
+                                  #oa-choose-file-btn-label {
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 10px;
+                                    margin-bottom: 30px;
+                                    border: 1px solid #6995d9;
+                                    background: #f9fbfd;
+                                    width: 100% !important;
+                                    height: 40px !important;
+                                    position: static !important;
+                                  }
+
+                                  #oa-choose-file-btn {
+                                    font-weight: 400;
+                                    padding: 0 15px;
+                                    display: flex;
+                                    align-items: center;
                                     justify-content: center;
                                     transition: .2s;
+                                    background: #6094db;
+                                    color: white;
+                                    fo: 100%;
+                                    outline: none;
+                                    border: none;
+                                    box-shadow: none;
+                                    height: 100%;
                                   }
 
                                   #choose-file-btn:hover {
                                     background: rgb(0, 117, 180);
                                     color: white;
                                   }
+
+                                  #oa-chosen-file-name {
+                                    color: 
+                                    font-size: 15px;
+                                  }
+
+                                  .files__descriptions {
+                                    display: block !important;
+                                  }
+
+
                                 </style>
-                                <div style="height: 60px; display: flex; ">
-                                  <label id="choose-file-btn">
-                                    Choose File
+
+                                <div class="oa-choose-file-container">
+                                  <h5 class="submission__upload__files__title">
+                                    {% trans "File Upload " %}
+                                    {% if file_upload_response == "required" %}
+                                      {% trans "(Required)" %}
+                                    {% elif file_upload_response == "optional" %}
+                                      {% trans "(Optional)" %}
+                                    {% endif %}
+                                  </h5>
+  
+                                  <label id="oa-choose-file-btn-label">
+                                    <span id="oa-choose-file-btn">
+                                      Browse
+                                    </span>  
+                                    <span id="oa-chosen-file-name">No file chosen</span>
                                     <input style="width: 0; height: 0; overflow: hidden; display: block;" type="file" class="submission__answer__upload file--upload" id="submission_answer_upload_{{ xblock_id }}" {% if allow_multiple_files %}multiple=""{% endif %} accept="{{white_listed_file_types|join:", "}}">
-                                  </label>  
-                                </div> 
+                                  </label> 
+                                </div>
 
-                                {% comment %} ################ file desc ####################  {% endcomment %}
-                                <div class="files__descriptions"></div>
+                                <div class="files__descriptions" >
+                                  <div class='submission__file__description__label'>
+                                    Describe your file (required):
+                                    <div class="submission__file__description">
+                                      <input aria-label="" class="file__description file__description__0" />
+                                    </div>
+                                  </div>
+                                </div>
 
-                                <div >
-                                  <button style="float: none;" type="submit" class="file__upload action action--upload">
+
+                                <div id="oa-upload-file-btn-container">
+                                  <button style="float: none;" type="submit" class="file__upload action action--upload disabled">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                                    </svg>
+
                                     {% if allow_multiple_files %}
                                         {% trans "Upload files" %}
                                     {% else %}
@@ -363,27 +383,29 @@
                                     {% endif %}
                                   </button>
                                 </div>
-
-
                             </li>
 
-                            <div class="upload__error">
-                              <div class="message message--inline message--error message--error-server" tabindex="-1">
-                                  <h5 class="message__title">{% trans "We could not upload files" %}</h5>
-                                  <div class="message__content"></div>
-                              </div>
-                            </div>
-                            <div class="delete__error">
-                                <div class="message message--inline message--error message--error-server" tabindex="-1">
-                                    <h5 class="message__title">{% trans "We could not delete files" %}</h5>
-                                    <div class="message__content"></div>
-                                </div>
-                            </div>
+
                           {% endif %}
 
                           <li class="field">
                             {% include "openassessmentblock/oa_uploaded_file.html" with file_upload_type=file_upload_type file_urls=file_urls class_prefix="submission__answer" including_template="response" xblock_id=xblock_id %}
                           </li>
+
+                          {% if file_upload_type %}
+                          <div style="margin-top: 30px;" class="upload__error">
+                            <div class="message message--inline message--error message--error-server" tabindex="-1">
+                                <h5 class="message__title">{% trans "We could not upload files" %}</h5>
+                                <div class="message__content"></div>
+                            </div>
+                          </div>
+                          <div class="delete__error">
+                              <div class="message message--inline message--error message--error-server" tabindex="-1">
+                                  <h5 class="message__title">{% trans "We could not delete files" %}</h5>
+                                  <div class="message__content"></div>
+                              </div>
+                          </div>
+                          {% endif %}
                           {% comment %}                           
                           <li class="field">
                             {% include "openassessmentblock/oa_team_uploaded_files.html" with file_upload_type=file_upload_type team_file_urls=team_file_urls class_prefix="submission__team__answer" including_template="response" xblock_id=xblock_id %}
@@ -419,7 +441,7 @@
 
                 <ul class="list list--actions">
                     <li style="border: none;" class="list--actions__item">
-                        <button type="submit" class="action action--submit step--response__submit"
+                        <button type="submit" class="action action--submit step--response__submit disabled"
                                 text_response="{{text_response}}"
                                 file_upload_response="{{file_upload_response}}"
                                 >
@@ -443,3 +465,12 @@
 {% endspaceless %}
 
 
+<script>
+  const fileUploaded = document.querySelector(".submission__answer__file__block a");
+  
+  if (fileUploaded) {
+    document.querySelector('.oa-choose-file-container').classList.add('disabled');
+    document.querySelector('.files__descriptions').classList.add('disabled');
+    document.querySelector(".step__actions button[type=submit]").classList.remove('disabled');
+  }
+</script>

@@ -6,19 +6,6 @@
             {% if title %}
                 <h3 style="font-size: 25px; font-weight: 600;" class="openassessment__title problem__header">{% trans title %}</h3>
             {% endif %}
-            {{file_urls}}
-
-            {% comment %}
-            <div class="wrapper-openassessment__message">
-                {% block message %}
-                <div class="openassessment__message message">
-                    <div class="message__content">
-                        <p>{% trans "This assignment has several steps. In the first step, you'll provide a response to the prompt. The other steps appear below the Your Response field." %}</p>
-                    </div>
-                </div>
-                {% endblock %}
-            </div>
-            {% endcomment %}
 
             {% comment %}
             <ol class="openassessment__steps">
@@ -62,12 +49,12 @@
                             </button>
                         </h4>
 
-                        {% comment %} <span class="step__status">
+                       <span class="step__status">
                             <span id="oa_step_status" class="step__status__value">
                               <span class="icon fa fa-spinner fa-spin" aria-hidden="true"></span>
                               <span class="copy">{% trans "Loading" %}</span>
                             </span>
-                        </span> {% endcomment %}
+                        </span> 
                     </header>
                 </li>
                 {% endif %} 
@@ -92,6 +79,7 @@
         left: 0;
         right: 0;
         z-index: 1000;
+        background: transparent;
     }
 
     .ui-dialog.ui-widget.ui-widget-content {
@@ -224,10 +212,21 @@
         font-weight: 400 !important; 
     }
 
+    .delete__uploaded__file:hover {
+        text-decoration: underline !important;
+    }
+
+    .submission__answer__display__file {
+        display: flex; 
+        align-items: center;
+    }
+
     .submission__answer__file__block {
-        background: #f1f4f9 !important;
+        background: transparent;
         padding: 0 20px !important;
         border-radius: 4px !important;
+        margin: 0;
+        background: transparent;
     }
 
     #submission-in-review .submission__answer__file__block {
@@ -281,5 +280,59 @@
         padding: 0 !important;
         border: none !important;
     }
+
+
+
+    .submission__file__description input {
+        height: 40px;
+        display: block;
+        background: #f9fbfd;
+        width: 100%;
+        border: 1px solid #6995d9 !important;
+        padding: 0;
+        padding: 0 10px;
+    }
+
+    button.file__upload {
+        padding: 0px 20px !important;
+        border: none !important;
+        border-radius: 0 !important;
+        background: #6094db !important;
+        color: white !important;
+        height: 40px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        cursor: pointer;
+    }
+
+
+    button.file__upload svg {
+        width: 18px !important;
+    }
+
+    .submission__file__description__label {
+        font-size: 14px;
+        font-weight: 600 !important;
+    }
+
+    .disabled {
+        opacity: 0.6 !important;
+        pointer-events: none !important;
+    }
+
+    .submission__answer__part__text__title,
+    #oa-uploaded-file-divider
+    {
+        display: none;
+    }
+
+    .is--in-progress .submission__answer__part__text__title,
+    .is--in-progress #oa-uploaded-file-divider
+     {
+        display: block;
+    }
+
+    
 
 </style>

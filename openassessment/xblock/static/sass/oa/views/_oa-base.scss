@@ -67,7 +67,8 @@
       @include margin-left($baseline-v/2);
       margin-top: ($baseline-v/2);
 
-      .copy, .icon {
+      .copy,
+      .icon {
         display: inline;
       }
 
@@ -99,7 +100,8 @@
       width: 100%;
       margin-bottom: 0;
 
-      .step__counter, .wrapper--copy {
+      .step__counter,
+      .wrapper--copy {
         display: inline-block;
         vertical-align: middle;
       }
@@ -163,7 +165,8 @@
         }
       }
 
-      .step__label, .step__deadline {
+      .step__label,
+      .step__deadline {
         display: block;
       }
 
@@ -282,7 +285,9 @@
         margin-bottom: 0;
       }
 
-      .step__counter:before, .step__label, .step__deadline {
+      .step__counter:before,
+      .step__label,
+      .step__deadline {
         color: $copy-color;
       }
 
@@ -315,7 +320,8 @@
       .step__status__value {
         background: $color-incomplete;
 
-        .copy, .icon {
+        .copy,
+        .icon {
           color: $copy-color;
         }
       }
@@ -324,7 +330,9 @@
     // STATE: step is unavailable
     &.is--unavailable {
 
-      .step__counter:before, .step__label, .step__deadline {
+      .step__counter:before,
+      .step__label,
+      .step__deadline {
         color: $copy-color;
       }
 
@@ -345,7 +353,9 @@
     // STATE: step is unavailable
     &.is--waiting {
 
-      .step__counter:before, .step__label, .step__deadline {
+      .step__counter:before,
+      .step__label,
+      .step__deadline {
         color: $copy-color;
       }
 
@@ -366,7 +376,8 @@
         color: $color-unavailable;
       }
 
-      .step__instruction, .grade__value__description {
+      .step__instruction,
+      .grade__value__description {
         color: $copy-color;
       }
     }
@@ -385,7 +396,8 @@
           display: inline-block;
         }
 
-        .copy, .icon {
+        .copy,
+        .icon {
           color: $copy-inverse-color;
         }
       }
@@ -409,7 +421,8 @@
           display: inline-block;
         }
 
-        .copy, .icon {
+        .copy,
+        .icon {
           color: $copy-inverse-color;
         }
       }
@@ -430,7 +443,8 @@
       .step__status__value {
         background: $color-error;
 
-        .copy, .icon {
+        .copy,
+        .icon {
           color: $copy-inverse-color;
         }
       }
@@ -452,12 +466,13 @@
 
     // If there is an icon, it should rotate when clicked
     @include transition(color $tmg-f2 ease-in);
+
     .icon {
       @include transition(all $tmg-f2 ease-in-out 0s);
       @include transform(rotate(bidi-rotate-angle(0deg)));
     }
 
-    &.is--initially--collapsed  {
+    &.is--initially--collapsed {
       .ui-slidable__content {
         display: none;
       }
@@ -486,7 +501,9 @@
       border-radius: ($baseline-v/4);
       padding: 5px;
 
-      &:active, &:focus:not(:disabled), &:hover:not(:disabled) {
+      &:active,
+      &:focus:not(:disabled),
+      &:hover:not(:disabled) {
         background: none;
         border: none;
         box-shadow: none;
@@ -495,7 +512,8 @@
       &:not([disabled]) {
         color: $action-primary-color;
 
-        &:hover, &:focus {
+        &:hover,
+        &:focus {
           color: $action-primary-color-focus;
         }
       }
@@ -527,7 +545,7 @@
     @extend %copy-2;
     color: $copy-color;
 
-    > * {
+    >* {
       margin-bottom: $baseline-v;
 
       &:last-child {
@@ -593,7 +611,7 @@
       }
 
       .files__descriptions {
-        display: none;
+        // display: none;
 
         .submission__file__description {
           padding-bottom: 10px;
@@ -805,7 +823,8 @@
         @include bidi-span-columns(12 of 12);
       }
 
-      .step__counter, .step__counter:before {
+      .step__counter,
+      .step__counter:before {
         display: none;
       }
 
@@ -815,7 +834,8 @@
         @include padding-left(0);
       }
 
-      .step__label, .grade__value {
+      .step__label,
+      .grade__value {
         display: inline;
         vertical-align: middle;
       }
@@ -862,239 +882,60 @@
     @extend %copy-3;
     @extend %ui-subsection-content;
 
-    padding: ($baseline-v/2) ($baseline-h/4) $baseline-v ($baseline-h/4);
-    border-radius: ($baseline-v/10);
-    list-style: none;
+    padding: ($baseline-v/2) ($baseline-h/4) $baseline-v (
+      $baseline-h/4
+    );
+  border-radius: ($baseline-v/10);
+  list-style: none;
 
-    .submission__answer__part {
-      margin: ($baseline-v*1.5) 0px 0px;
+  .submission__answer__part {
+    margin: ($baseline-v*1.5) 0px 0px;
 
-      &:first-child {
-        margin-top: 0px;
-      }
+    &:first-child {
+      margin-top: 0px;
     }
   }
+}
 
 
-  // --------------------
-  // UI: displayed peer assessments
-  // --------------------
+// --------------------
+// UI: displayed peer assessments
+// --------------------
 
-  // peer review summary
-  .submission__peer-evaluations {
-    @extend %ui-subsection;
+// peer review summary
+.submission__peer-evaluations {
+  @extend %ui-subsection;
+}
+
+.submission__peer-evaluations__title {
+  @extend %t-heading;
+  margin-bottom: ($baseline-v/2);
+  color: $heading-color;
+}
+
+// rubric questions
+.submission__peer-evaluations__questions {
+  @extend %no-list;
+  @extend %ui-subsection-content;
+  margin-bottom: ($baseline-v/2);
+
+  &:last-child {
+    margin-bottom: 0;
+    border-bottom: none;
+    padding-bottom: 0;
   }
 
-  .submission__peer-evaluations__title {
-    @extend %t-heading;
-    margin-bottom: ($baseline-v/2);
-    color: $heading-color;
+  // individual question
+  .question {
+    margin-bottom: ($baseline-v*1.5);
+    @extend %wipe-last-child;
   }
 
-  // rubric questions
-  .submission__peer-evaluations__questions {
-    @extend %no-list;
-    @extend %ui-subsection-content;
-    margin-bottom: ($baseline-v/2);
-
-    &:last-child {
-      margin-bottom: 0;
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-
-    // individual question
-    .question {
-      margin-bottom: ($baseline-v*1.5);
-      @extend %wipe-last-child;
-    }
-
-    .question__title {
-      @include clearfix();
-      margin-bottom: $baseline-v;
-      border-bottom: ($baseline-v/10) solid $heading-color;
-      padding-bottom: ($baseline-v/4);
-
-      .icon {
-        @extend %icon-1;
-        display: inline-block;
-        vertical-align: middle;
-      }
-    }
-
-    .question__title__copy {
-      @extend %t-heading;
-      @include margin-left(($baseline-h/4));
-      white-space: pre-wrap;
-    }
-
-    .question__score {
-      @extend %t-score;
-      @include float(right);
-      @include margin-left($baseline-v);
-    }
-
-    .question__score__value {
-      @extend %t-strong;
-      color: $heading-color;
-
-      &:after {
-        content: "/";
-        @include margin-left(($baseline-v/4));
-        color: $heading-color;
-      }
-    }
-
-    .question__score__potential {
-      @extend %t-strong;
-      color: $heading-color;
-
-      .unit {
-        @extend %t-strong;
-        @include margin-left(($baseline-v/4));
-      }
-    }
-
-    .question__answers {
-      @extend %no-list;
-      @extend %wipe-last-child;
-      @include row();
-      overflow: visible; // needed for ui-hints
-    }
-
-    // individual answers
-    .answer {
-      margin-bottom: $baseline-v;
-      @extend %no-list;
-
-      // CASE: self assessment
-      &.self-assessment {
-        @include border-left(($baseline-h/8) solid $color-decorative-quaternary);
-        @include padding-left(($baseline-h/2));
-
-        .answer__source {
-          color: $color-decorative-tertiary;
-        }
-      }
-    }
-
-    .answer__source {
-      @extend %hd-5;
-      @extend %t-strong;
-      @extend %t-titlecase;
-      display: block;
-      color: $heading-color;
-
-      .answer__source__value-with-points {
-        @extend %t-score;
-        color: $heading-color;
-      }
-    }
-
-    .answer__value {
-      display: block;
-      margin-bottom: ($baseline-v/2);
-      color: $heading-color;
-
-      .answer__value__raw {
-        white-space: pre-wrap;
-      }
-    }
-
-    .answer__value__value {
-      @extend %hd-2;
-      @extend %t-strong;
-      color: $heading-color;
-
-      .ui-hint {
-        @extend %trans-color;
-        color: $color-decorative-tertiary;
-
-        // STATE: hover - needed to reset color to what's expected from _navigation.scss (TODO: clean up specificity)
-        &:hover, &:focus {
-          color: $action-primary-color-focus;
-        }
-      }
-    }
-
-    .answer__score, .answer__score__value {
-      @extend %t-score;
-      display: block;
-      color: $heading-color;
-    }
-  }
-
-  // criterion-based feedback
-  .answer--feedback {
-
-    @include media($bp-ds) {
-      @include bidi-span-columns(6 of 6);
-    }
-
-    @include media($bp-dm) {
-      @include bidi-span-columns(12 of 12);
-    }
-
-    @include media($bp-dl) {
-      @include bidi-span-columns(12 of 12);
-    }
-
-    @include media($bp-dx) {
-      @include bidi-span-columns(12 of 12);
-    }
-
-    .answer--feedback__title {
-      @extend %action-2;
-    }
-
-    .answer--feedback__title__copy {
-      @include margin-left(($baseline-h/4));
-    }
-
-    .answer--feedback__content {
-      margin-top: ($baseline-v/4);
-    }
-
-    .action--save {
-      @extend %action-button !optional
-    }
-
-    .feedback {
-      @extend %no-list;
-      @extend %wipe-last-child;
-      margin-bottom: $baseline-v;
-    }
-
-    .feedback__source {
-      @extend %hd-5;
-      @extend %t-strong;
-      @extend %t-titlecase;
-      display: block;
-      color: $heading-color;
-    }
-
-    .feedback__value {
-      @extend %copy-3;
-      display: block;
-
-      .feedback__value__raw {
-        white-space: pre-wrap;
-      }
-
-    }
-  }
-
-
-  // overall feedback form
-  .submission__feedback {
-    @extend %ui-subsection;
-  }
-
-  .submission__feedback__title {
-    @extend %ui-subsection-title;
-    @extend %t-heading;
-    border-bottom-color: solid $heading-color;
-    color: $heading-color;
+  .question__title {
+    @include clearfix();
+    margin-bottom: $baseline-v;
+    border-bottom: ($baseline-v/10) solid $heading-color;
+    padding-bottom: ($baseline-v/4);
 
     .icon {
       @extend %icon-1;
@@ -1103,61 +944,247 @@
     }
   }
 
-  .submission__feedback__title__copy {
+  .question__title__copy {
     @extend %t-heading;
+    @include margin-left(($baseline-h/4));
+    white-space: pre-wrap;
+  }
+
+  .question__score {
+    @extend %t-score;
+    @include float(right);
+    @include margin-left($baseline-v);
+  }
+
+  .question__score__value {
+    @extend %t-strong;
+    color: $heading-color;
+
+    &:after {
+      content: "/";
+      @include margin-left(($baseline-v/4));
+      color: $heading-color;
+    }
+  }
+
+  .question__score__potential {
+    @extend %t-strong;
+    color: $heading-color;
+
+    .unit {
+      @extend %t-strong;
+      @include margin-left(($baseline-v/4));
+    }
+  }
+
+  .question__answers {
+    @extend %no-list;
+    @extend %wipe-last-child;
+    @include row();
+    overflow: visible; // needed for ui-hints
+  }
+
+  // individual answers
+  .answer {
+    margin-bottom: $baseline-v;
+    @extend %no-list;
+
+    // CASE: self assessment
+    &.self-assessment {
+      @include border-left(($baseline-h/8) solid $color-decorative-quaternary);
+      @include padding-left(($baseline-h/2));
+
+      .answer__source {
+        color: $color-decorative-tertiary;
+      }
+    }
+  }
+
+  .answer__source {
+    @extend %hd-5;
+    @extend %t-strong;
+    @extend %t-titlecase;
+    display: block;
+    color: $heading-color;
+
+    .answer__source__value-with-points {
+      @extend %t-score;
+      color: $heading-color;
+    }
+  }
+
+  .answer__value {
+    display: block;
+    margin-bottom: ($baseline-v/2);
+    color: $heading-color;
+
+    .answer__value__raw {
+      white-space: pre-wrap;
+    }
+  }
+
+  .answer__value__value {
+    @extend %hd-2;
+    @extend %t-strong;
+    color: $heading-color;
+
+    .ui-hint {
+      @extend %trans-color;
+      color: $color-decorative-tertiary;
+
+      // STATE: hover - needed to reset color to what's expected from _navigation.scss (TODO: clean up specificity)
+      &:hover,
+      &:focus {
+        color: $action-primary-color-focus;
+      }
+    }
+  }
+
+  .answer__score,
+  .answer__score__value {
+    @extend %t-score;
+    display: block;
+    color: $heading-color;
+  }
+}
+
+// criterion-based feedback
+.answer--feedback {
+
+  @include media($bp-ds) {
+    @include bidi-span-columns(6 of 6);
+  }
+
+  @include media($bp-dm) {
+    @include bidi-span-columns(12 of 12);
+  }
+
+  @include media($bp-dl) {
+    @include bidi-span-columns(12 of 12);
+  }
+
+  @include media($bp-dx) {
+    @include bidi-span-columns(12 of 12);
+  }
+
+  .answer--feedback__title {
+    @extend %action-2;
+  }
+
+  .answer--feedback__title__copy {
     @include margin-left(($baseline-h/4));
   }
 
-  .submission__feedback__content {
-    @extend %ui-subsection-content;
+  .answer--feedback__content {
+    margin-top: ($baseline-v/4);
+  }
+
+  .action--save {
+    @extend %action-button !optional
+  }
+
+  .feedback {
+    @extend %no-list;
+    @extend %wipe-last-child;
     margin-bottom: $baseline-v;
   }
 
-  .submission__feedback__instructions {
-    @extend %copy-2;
-    margin-bottom: $baseline-v;
-    color: $copy-color;
+  .feedback__source {
+    @extend %hd-5;
+    @extend %t-strong;
+    @extend %t-titlecase;
+    display: block;
+    color: $heading-color;
   }
 
-  .submission__feedback__elements {
-    padding: $baseline-v ($baseline-h/2) $baseline-v ($baseline-h/2);
-    background: $color-decorative-quaternary;
-    border-radius: ($baseline-v/10);
-  }
+  .feedback__value {
+    @extend %copy-3;
+    display: block;
 
-  .submission__feedback__fields {
-    margin-bottom: $baseline-v;
-
-    .field {
-      margin-bottom: ($baseline-v*1.5);
-
-      &:last-child {
-        margin-bottom: 0;
-      }
+    .feedback__value__raw {
+      white-space: pre-wrap;
     }
 
-    select {
-      display: block;
-    }
+  }
+}
 
-    textarea {
-      @extend %ui-content-longanswer;
-      min-height: ($baseline-v*10);
+
+// overall feedback form
+.submission__feedback {
+  @extend %ui-subsection;
+}
+
+.submission__feedback__title {
+  @extend %ui-subsection-title;
+  @extend %t-heading;
+  border-bottom-color: solid $heading-color;
+  color: $heading-color;
+
+  .icon {
+    @extend %icon-1;
+    display: inline-block;
+    vertical-align: middle;
+  }
+}
+
+.submission__feedback__title__copy {
+  @extend %t-heading;
+  @include margin-left(($baseline-h/4));
+}
+
+.submission__feedback__content {
+  @extend %ui-subsection-content;
+  margin-bottom: $baseline-v;
+}
+
+.submission__feedback__instructions {
+  @extend %copy-2;
+  margin-bottom: $baseline-v;
+  color: $copy-color;
+}
+
+.submission__feedback__elements {
+  padding: $baseline-v (
+    $baseline-h/2) $baseline-v (
+    $baseline-h/2
+  );
+background: $color-decorative-quaternary;
+border-radius: ($baseline-v/10);
+}
+
+.submission__feedback__fields {
+  margin-bottom: $baseline-v;
+
+  .field {
+    margin-bottom: ($baseline-v*1.5);
+
+    &:last-child {
+      margin-bottom: 0;
     }
   }
 
-  .submission__feedback__actions {
-    @extend %ui-subsection-content;
-    padding-top: 0;
-
-    .list--actions {
-      padding: 0;
-    }
+  select {
+    display: block;
   }
 
-  .action--submit {
-    @extend %btn--secondary;
-    @extend %action-2;
-    @include margin-right(($baseline-v/2));
+  textarea {
+    @extend %ui-content-longanswer;
+    min-height: ($baseline-v*10);
   }
+}
+
+.submission__feedback__actions {
+  @extend %ui-subsection-content;
+  padding-top: 0;
+
+  .list--actions {
+    padding: 0;
+  }
+}
+
+.action--submit {
+  @extend %btn--secondary;
+  @extend %action-2;
+  @include margin-right(($baseline-v/2));
+}
 }
