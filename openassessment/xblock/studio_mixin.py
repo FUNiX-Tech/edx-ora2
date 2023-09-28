@@ -178,6 +178,7 @@ class StudioMixin:
             'prompts': self.prompts,
             'prompts_type': self.prompts_type,
             'title': self.title,
+            'estimated_time': self.estimated_time,
             'submission_due': submission_due,
             'submission_start': submission_start,
             'assessments': assessments,
@@ -293,6 +294,7 @@ class StudioMixin:
         # At this point, all the input data has been validated,
         # so we can safely modify the XBlock fields.
         self.title = data['title']
+        self.estimated_time = data['estimated_time']
         self.display_name = data['title']
         self.prompts = data['prompts']
         self.prompts_type = data['prompts_type']

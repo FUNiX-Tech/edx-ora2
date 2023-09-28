@@ -1,11 +1,15 @@
 {% load i18n %}
+{% load oa_extras %}
 {% spaceless %}
+
 <div class="wrapper wrapper--xblock wrapper--openassessment theme--basic">
     <div class="openassessment problem">
         <div class="wrapper--grid">
             {% if title %}
                 <h3 style="font-size: 25px; font-weight: 600;" class="openassessment__title problem__header">{% trans title %}</h3>
             {% endif %}
+
+            {{ estimated_time|beautiful_minutes }}
 
             {% comment %}
             <ol class="openassessment__steps">

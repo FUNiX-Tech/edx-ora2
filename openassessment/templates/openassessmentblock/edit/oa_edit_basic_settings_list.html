@@ -7,6 +7,16 @@
         </div>
         <p class="setting-help">{% trans "The display name for this component." %}</p>
     </li>
+
+    <li id="openassessment_estimated_time_editor_wrapper" class="field comp-setting-entry">
+        <div class="wrapper-comp-setting">
+            <label for="openassessment_estimated_time_editor" class="setting-label">{% trans "Estimated Time "%}</label>
+            <input type="number" min=0 max=999999999 id="openassessment_estimated_time_editor" class="input setting-input" name="estimated_time" value="{{ estimated_time }}">
+        </div>
+        <p class="setting-help">{% trans "The estimated tme to complete this assignment in minutes used only for display." %}</p>
+    </li>
+
+
     <li id="openassessment_submission_text_response_wrapper" class="field comp-setting-entry">
         <div class="wrapper-comp-setting">
             <label for="openassessment_submission_text_response" class="setting-label">{% trans "Text Response"%}</label>

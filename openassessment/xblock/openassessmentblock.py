@@ -288,6 +288,12 @@ class OpenAssessmentBlock(
         help="Custom list of file types allowed with submission."
     )
 
+    estimated_time = Integer(
+        default=0,
+        scope=Scope.content,
+        help="The estimated tme to complete this assignment in minutes used only for display."
+    )
+
     @property
     def config_data(self):
         return ORAConfigAPI(self)
@@ -548,6 +554,7 @@ class OpenAssessmentBlock(
         # All data we intend to pass to the front end.
         context_dict = {
             "title": self.title,
+            "estimated_time": self.estimated_time,
             "prompts": self.prompts,
             "prompts_type": self.prompts_type,
             "rubric_assessments": ui_models,

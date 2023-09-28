@@ -457,6 +457,7 @@ export class Server {
       feedback_prompt: options.feedbackPrompt,
       feedback_default_text: options.feedback_default_text,
       title: options.title,
+      estimated_time: options.estimated_time,
       submission_start: options.submissionStart,
       submission_due: options.submissionDue,
       date_config_type: options.dateConfigType,

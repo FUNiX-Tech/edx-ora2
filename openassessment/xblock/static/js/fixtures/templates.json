@@ -4,6 +4,7 @@
         "context": {
             "show_staff_area": false,
             "title": "Test title",
+            "estimated_time": 100,
             "question": "Test prompt",
             "rubric_criteria": [],
             "rubric_assessments": [
@@ -46,6 +47,7 @@
         "context": {
             "show_staff_area": true,
             "title": "Test title",
+            "estimated_time": 100,
             "question": "Test prompt",
             "rubric_criteria": [],
             "rubric_assessments": [
@@ -93,8 +95,18 @@
             "saved_response": {
                 "answer": {
                     "parts": [
-                        { "text": "", "prompt": { "description": "Prompt 1" }},
-                        { "text": "", "prompt": { "description": "Prompt 2" }}
+                        {
+                            "text": "",
+                            "prompt": {
+                                "description": "Prompt 1"
+                            }
+                        },
+                        {
+                            "text": "",
+                            "prompt": {
+                                "description": "Prompt 2"
+                            }
+                        }
                     ]
                 }
             },
@@ -367,7 +379,6 @@
                     "points_possible": 6,
                     "rubric": {
                         "criteria": [
-
                             {
                                 "name": "Criterion 1",
                                 "prompt": "Prompt 1",
@@ -422,8 +433,16 @@
     {
         "template": "openassessmentblock/edit/oa_edit.html",
         "context": {
-            "prompts": [{ "description": "How much do you like waffles?" }, { "description": "How much do you like waffles 2?" }],
+            "prompts": [
+                {
+                    "description": "How much do you like waffles?"
+                },
+                {
+                    "description": "How much do you like waffles 2?"
+                }
+            ],
             "title": "The most important of all questions.",
+            "estimated_time": 100,
             "submission_start": "2014-01-02T12:15",
             "submission_due": "2014-10-01T04:53",
             "date_config_type": "manual",
@@ -515,8 +534,16 @@
     {
         "template": "openassessmentblock/edit/oa_edit.html",
         "context": {
-            "prompts": [{ "description": "How much do you like waffles?" }, { "description": "How much do you like waffles 2?" }],
+            "prompts": [
+                {
+                    "description": "How much do you like waffles?"
+                },
+                {
+                    "description": "How much do you like waffles 2?"
+                }
+            ],
             "title": "Test title",
+            "estimated_time": 0,
             "submission_start": "2014-01-1T10:00:00",
             "submission_due": "2014-10-1T10:00:00",
             "date_config_type": "manual",
@@ -569,8 +596,12 @@
                         {
                             "answer": {
                                 "parts": [
-                                    { "text": "Test answer 1"},
-                                    { "text": "Test answer 2"}
+                                    {
+                                        "text": "Test answer 1"
+                                    },
+                                    {
+                                        "text": "Test answer 2"
+                                    }
                                 ]
                             },
                             "criteria": [
@@ -615,8 +646,12 @@
                     "template": {
                         "answer": {
                             "parts": [
-                                { "text": ""},
-                                { "text": ""}
+                                {
+                                    "text": ""
+                                },
+                                {
+                                    "text": ""
+                                }
                             ]
                         },
                         "criteria": [
@@ -943,7 +978,6 @@
                     "points_possible": 6,
                     "rubric": {
                         "criteria": [
-
                             {
                                 "name": "Criterion 1",
                                 "prompt": "Prompt 1",
@@ -991,7 +1025,7 @@
             ],
             "submission": {
                 "image_url": "/test-url",
-                "answer":{
+                "answer": {
                     "text": "testing response text"
                 }
             },
@@ -1153,7 +1187,7 @@
             ],
             "submission": {
                 "image_url": "/test-url",
-                "answer":{
+                "answer": {
                     "text": "testing response text"
                 }
             },
@@ -1468,8 +1502,18 @@
             "saved_response": {
                 "answer": {
                     "parts": [
-                        { "text": "", "prompt": { "description": "Prompt 1" }},
-                        { "text": "", "prompt": { "description": "Prompt 2" }}
+                        {
+                            "text": "",
+                            "prompt": {
+                                "description": "Prompt 1"
+                            }
+                        },
+                        {
+                            "text": "",
+                            "prompt": {
+                                "description": "Prompt 2"
+                            }
+                        }
                     ]
                 }
             },

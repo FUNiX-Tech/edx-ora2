@@ -749,6 +749,10 @@ def serialize_content_to_xml(oa_block, root):
     title = etree.SubElement(root, 'title')
     title.text = str(oa_block.title)
 
+    # Open assessment estimated_time
+    estimated_time = etree.SubElement(root, 'estimated_time')
+    estimated_time.text = int(oa_block.estimated_time)
+
     # Assessment list
     assessments_root = etree.SubElement(root, 'assessments')
     serialize_assessments(assessments_root, oa_block)
@@ -924,6 +928,12 @@ def parse_from_xml(root):
         raise UpdateFromXmlError('Every assessment must contain a "title" element.')
     title = _safe_get_text(title_el)
 
+    # Retrieve the estimated_time
+    estimated_time_el = root.find('estimated_time')
+    if estimated_time_el is None:
+        raise UpdateFromXmlError('Every assessment must contain a "estimated_time" element.')
+    estimated_time = int(_safe_get_text(estimated_time_el))
+
     # Retrieve the rubric
     rubric_el = root.find('rubric')
     if rubric_el is None:
@@ -961,6 +971,7 @@ def parse_from_xml(root):
 
     return {
         'title': title,
+        'estimated_time': estimated_time,
         'prompts': prompts,
         'prompts_type': prompts_type,
         'rubric_criteria': rubric['criteria'],

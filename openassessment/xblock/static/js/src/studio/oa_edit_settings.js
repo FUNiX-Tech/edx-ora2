@@ -29,6 +29,7 @@ export class EditSettingsView {
     this.onFileUploadTypeChanged = this.onFileUploadTypeChanged.bind(this);
     this.onTeamsEnabledChange = this.onTeamsEnabledChange.bind(this);
     this.displayName = this.displayName.bind(this);
+    this.estimatedTime = this.estimatedTime.bind(this);
     this.textResponseNecessity = this.textResponseNecessity.bind(this);
     this.textResponseEditor = this.textResponseEditor.bind(this);
     this.fileUploadResponseNecessity = this.fileUploadResponseNecessity.bind(this);
@@ -81,6 +82,8 @@ export class EditSettingsView {
       $('#openassessment_leaderboard_editor', this.element),
       { min: 0, max: 100 },
     );
+
+
 
     this.fileTypeWhiteListInputField = new InputControl(
       $('#openassessment_submission_white_listed_file_types', this.element),
@@ -207,6 +210,22 @@ export class EditSettingsView {
     const sel = $('#openassessment_title_editor', this.settingsElement);
     return Fields.stringField(sel, name);
   }
+
+
+  estimatedTime(minutes) {
+    const sel = $('#openassessment_estimated_time_editor', this.settingsElement);
+    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+    console.log(Fields.stringField(sel, minutes))
+    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+    return Number(Fields.stringField(sel, minutes));
+  }
+
+
 
   /**
      Get or set text response necessity.

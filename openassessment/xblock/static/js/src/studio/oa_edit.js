@@ -214,8 +214,8 @@ export class StudioView {
      * */
   confirmPostReleaseUpdate(onConfirm) {
     const msg = 'This ORA has already been released. '
-                + 'Changes will only affect learners making new submissions. '
-                + 'Existing submissions will not be modified by this change.';
+      + 'Changes will only affect learners making new submissions. '
+      + 'Existing submissions will not be modified by this change.';
     // TODO: classier confirm dialog
     if (window.confirm(gettext(msg))) { onConfirm(); }
   }
@@ -238,6 +238,7 @@ export class StudioView {
       feedback_default_text: this.rubricView.feedback_default_text(),
       criteria: this.rubricView.criteriaDefinition(),
       title: this.settingsView.displayName(),
+      estimated_time: this.settingsView.estimatedTime(),
       submissionStart: this.scheduleView.submissionStart(),
       submissionDue: this.scheduleView.submissionDue(),
       dateConfigType: this.scheduleView.dateConfigType(),

@@ -5,25 +5,25 @@ import { StudioView } from 'studio/oa_edit';
 Tests for OA XBlock editing.
 **/
 
-describe("OpenAssessment.StudioView", function() {
+describe("OpenAssessment.StudioView", function () {
 
     var runtime = {
-        notify: function(type, data) {}
+        notify: function (type, data) { }
     };
 
     // Stub server that returns dummy data or reports errors.
-    var StubServer = function() {
+    var StubServer = function () {
         this.updateError = false;
         this.isReleased = false;
         this.receivedData = null;
-        this.successPromise = $.Deferred(function(defer) {
+        this.successPromise = $.Deferred(function (defer) {
             defer.resolve();
         });
-        this.errorPromise = $.Deferred(function(defer) {
+        this.errorPromise = $.Deferred(function (defer) {
             defer.rejectWith(this, ['Test error']);
         }).promise();
 
-        this.updateEditorContext = function(kwargs) {
+        this.updateEditorContext = function (kwargs) {
             if (this.updateError) {
                 return this.errorPromise;
             }
@@ -33,9 +33,9 @@ describe("OpenAssessment.StudioView", function() {
             }
         };
 
-        this.checkReleased = function() {
+        this.checkReleased = function () {
             var server = this;
-            return $.Deferred(function(defer) {
+            return $.Deferred(function (defer) {
                 defer.resolveWith(this, [server.isReleased]);
             }).promise();
         };
@@ -47,7 +47,7 @@ describe("OpenAssessment.StudioView", function() {
 
     var EXPECTED_SERVER_DATA = {
         title: "The most important of all questions.",
-        prompts: [{"description": "How much do you like waffles?"}, {description : 'How much do you like waffles 2?'}],
+        prompts: [{ "description": "How much do you like waffles?" }, { description: 'How much do you like waffles 2?' }],
         feedbackPrompt: "Feedback default prompt",
         feedback_default_text: "Feedback default text",
         submissionStart: "2014-01-02T12:15",
@@ -128,7 +128,7 @@ describe("OpenAssessment.StudioView", function() {
         ]
     };
 
-    beforeEach(function() {
+    beforeEach(function () {
         // Load the DOM fixture
         loadFixtures('oa_edit.html');
 
@@ -136,7 +136,7 @@ describe("OpenAssessment.StudioView", function() {
         server = new StubServer();
         // mock data sent from backend
         data = {
-            FILE_EXT_BLACK_LIST: ['exe','app']
+            FILE_EXT_BLACK_LIST: ['exe', 'app']
         };
 
         // Mock the runtime
@@ -147,7 +147,7 @@ describe("OpenAssessment.StudioView", function() {
         view = new StudioView(runtime, el, server, data);
     });
 
-    it("sends the editor context to the server", function() {
+    it("sends the editor context to the server", function () {
         // Save the current state of the problem
         // (defined by the current state of the DOM),
         // and verify that the correct information was sent
@@ -185,13 +185,13 @@ describe("OpenAssessment.StudioView", function() {
         expect(server.receivedData.editorAssessmentsOrder).toEqual(EXPECTED_SERVER_DATA.editorAssessmentsOrder);
     });
 
-    it("confirms changes for a released problem", function() {
+    it("confirms changes for a released problem", function () {
         // Simulate an XBlock that has been released
         server.isReleased = true;
 
         // Stub the confirmation step (avoid showing the dialog)
         spyOn(view, 'confirmPostReleaseUpdate').and.callFake(
-            function(onConfirm) { onConfirm(); }
+            function (onConfirm) { onConfirm(); }
         );
 
         // Save the updated context
@@ -201,20 +201,20 @@ describe("OpenAssessment.StudioView", function() {
         expect(view.confirmPostReleaseUpdate).toHaveBeenCalled();
     });
 
-    it("cancels editing", function() {
+    it("cancels editing", function () {
         view.cancel();
         expect(runtime.notify).toHaveBeenCalledWith('cancel', {});
     });
 
-    it("displays an error when server reports an error", function() {
+    it("displays an error when server reports an error", function () {
         server.updateError = true;
         view.save();
-        expect(runtime.notify).toHaveBeenCalledWith('error', {msg: 'Test error'});
+        expect(runtime.notify).toHaveBeenCalledWith('error', { msg: 'Test error' });
     });
 
-    it("displays the correct tab on initialization", function() {
-        $(".oa_editor_tab", view.element).each(function(){
-            if ($(this).attr('aria-controls') == "oa_prompt_editor_wrapper"){
+    it("displays the correct tab on initialization", function () {
+        $(".oa_editor_tab", view.element).each(function () {
+            if ($(this).attr('aria-controls') == "oa_prompt_editor_wrapper") {
                 expect($(this).hasClass('ui-state-active')).toBe(true);
             } else {
                 expect($(this).hasClass('ui-state-active')).toBe(false);
@@ -222,7 +222,7 @@ describe("OpenAssessment.StudioView", function() {
         });
     });
 
-    it("validates fields before saving", function() {
+    it("validates fields before saving", function () {
         // Initially, there should not be a validation alert
         expect(view.alert.isVisible()).toBe(false);
 
@@ -253,7 +253,7 @@ describe("OpenAssessment.StudioView", function() {
         expect(server.receivedData).not.toBe(null);
     });
 
-    it("marks invalid tabs as invalid", function() {
+    it("marks invalid tabs as invalid", function () {
         // Initially, tabs should be valid
         expect(view.alert.isVisible()).toBe(false);
 
@@ -267,7 +267,7 @@ describe("OpenAssessment.StudioView", function() {
         view.save();
 
         // Since all views throw errors, expect the tabs to be marked as invalid
-        $(".oa_editor_tab", view.element).each(function(){
+        $(".oa_editor_tab", view.element).each(function () {
             expect($(this).find('.validation-warning').is(":visible")).toBe(true);
         });
 
@@ -275,14 +275,14 @@ describe("OpenAssessment.StudioView", function() {
         view.save();
 
         // Expect that the validation errors were cleared
-        $(".oa_editor_tab", view.element).each(function(){
+        $(".oa_editor_tab", view.element).each(function () {
             expect($(this).find('.validation-warning').is(":visible")).toBe(false);
         });
     });
 
-    it("shows invalid tabs in the validation banner", function() {
+    it("shows invalid tabs in the validation banner", function () {
         // Given some tabs with validation errors (rubric, and assessmentSteps)
-        const invalidViews = [ view.rubricView, view.assessmentsStepsView];
+        const invalidViews = [view.rubricView, view.assessmentsStepsView];
         const invalidViewNames = ['Rubric', 'Assessment steps'];
 
         const validViews = [view.promptsView, view.scheduleView, view.settingsView];
