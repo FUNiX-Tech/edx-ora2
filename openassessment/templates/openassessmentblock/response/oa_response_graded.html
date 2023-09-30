@@ -2,9 +2,11 @@
 {% load i18n %}
 
 {% block list_item %}
-<li id="openassessment__response__{{ xblock_id }}"
+<li 
+    id="openassessment__response__{{ xblock_id }}"
     class="openassessment__steps__step step--response is--complete {% if allow_latex %}allow--latex{%endif%}"
-    tabindex="-1">
+    tabindex="-1"
+>
 {% endblock %}
 
 {% block button %}

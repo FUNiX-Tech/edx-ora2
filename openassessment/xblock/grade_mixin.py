@@ -599,44 +599,6 @@ class GradeMixin:
 
         return assessment
 
-    def _get_assessment_type(self, workflow):
-        """
-        Determine which assessment is decisive in determining the grade.
-        Args:
-            workflow (dict): The serialized Workflow model.
-        Returns:
-            str: Type of decisive assessment. Possible values are self, staff, peer.
-        """
-        score = workflow['score']
-        complete = score is not None
-
-        if "staff-assessment" in self.assessment_steps:
-            return "staff"
-
-        # Edge case: staff overrides the grade.
-        # If a score is overriden by staff, it'll always have an
-        # attached annotation type with the `staff_defined` value,
-        # so we look for that in this problem's annotation and
-        # return staff if it's found.
-        grade_annotation_types = [annotation['annotation_type'] for annotation in (score or {}).get("annotations", [])]
-        if complete and "staff_defined" in grade_annotation_types:
-            return "staff"
-
-        # For other cases, we just need to figure out the
-        # priority of each (either peer or self).
-        # Just loop over the values and return the first one
-        # after staff.
-        for _assessment_type in workflow["assessment_score_priority"]:
-            # assessment_step would always have staff in it, so skip it
-            # while checking the priority here.
-            if _assessment_type == "staff":
-                continue
-
-            if f"{_assessment_type}-assessment" in self.assessment_steps:
-                return _assessment_type
-
-        return None  # Just to make pylint happy
-
     def _get_score_explanation(self, workflow):
         """
         Return a string which explains how grade is calculated for an ORA assessment
@@ -649,30 +611,19 @@ class GradeMixin:
         score = workflow['score']
         complete = score is not None
 
-        assessment_type = self._get_assessment_type(workflow)
 
         sentences = {
-            "staff": _("The grade for this problem is determined by your Staff Grade."),
-            "peer": _(
-                "The grade for this problem is determined by the median score of "
-                "your Peer Assessments."
-            ),
-            "self": _("The grade for this problem is determined by your Self Assessment.")
+            "passed": _("Submission Passed."),
+            "failed": _("Submission Did Not Pass."),
+            "unable_to_review": _("Unable to Review.")
         }
-        second_sentence = sentences.get(assessment_type, "")
+        # second_sentence = sentences.get(assessment_type, "")
+        second_sentence = ""
 
-        if complete:
-            first_sentence = _(
-                "You have successfully completed this problem and received a {earned_points}/{total_points}."
-            ).format(earned_points=score["points_earned"], total_points=score["points_possible"])
-        else:
-            first_sentence = ""
-            # Special Case i.e If the submission only have peer assessment
-            if "peer-assessment" in self.assessment_steps and "self-assessment" not in self.assessment_steps and \
-               "staff-assessment" not in self.assessment_steps:
-                first_sentence = _(
-                    "You have not yet received all necessary peer reviews to determine your final grade."
-                )
+        first_sentence = _(
+            "You have successfully completed this problem and received a {earned_points}/{total_points}."
+        ).format(earned_points=score["points_earned"], total_points=score["points_possible"])
+
 
         return f"{first_sentence} {second_sentence}".strip()
 

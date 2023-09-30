@@ -5,45 +5,53 @@
 <div class="wrapper wrapper--xblock wrapper--openassessment theme--basic">
     <div class="openassessment problem">
         <div class="wrapper--grid">
-            {% if title %}
-                <h3 style="font-size: 25px; font-weight: 600;" class="openassessment__title problem__header">{% trans title %}</h3>
-            {% endif %}
+            <div 
+                id="assignment-header"
+                style="
+                    border-bottom: 1px solid #e5e5e5;
+                    padding: 20px 0;
+                    margin-bottom: 50px;
+                "
+            >
+                {% if title %}
+                    <h3 
+                        style="
+                            font-size: 25px; 
+                            font-weight: 600; 
+                            margin-bottom: 10px;
+                        " 
+                        class="openassessment__title problem__header"
+                    >
+                    {% trans title %}
+                    </h3>
+                {% endif %}
 
-            {{ estimated_time|beautiful_minutes }}
+            <div style="
+                align-items: center;
+                display: flex;
+                font-size: 14px;
+                " 
+                id="estimated-time"
+            >
+                <p style="
+                    background: #fff0d7;
+                    padding: 0px 10px;
+                    border-radius: 3px;
+                    border: 1px solid #ebd1a6;
+                    margin: 0;
+                ">
+                    <span>Estimated Completion Time: </span><span >{{ estimated_time|beautiful_minutes }}</span>
+                </p>
+            </div>
+            </div>
+            
 
-            {% comment %}
-            <ol class="openassessment__steps">
-                {% for assessment in rubric_assessments %}
-                    <li class="{{ assessment.class_id }} openassessment__steps__step is--loading">
-                        <header class="step__header ui-slidable__container">
-                            <h4 class="step__title">
-                                <button class="ui-slidable" aria-expanded="false" aria-describedby="oa_step_status oa_step_deadline" disabled>
-                                    <span class="step__counter"></span>
-                                    <span class="wrapper--copy">
-                                        <span class="step__label">{% trans assessment.title %}</span>
-                                    </span>
-                                </button>
-                            </h4>
-
-                            <span class="step__status">
-                                <span id="oa_step_status" class="step__status__value">
-                                  <span class="icon fa fa-spinner fa-spin" aria-hidden="true"></span>
-                                  <span class="copy">{% trans "Loading" %}</span>
-                                </span>
-                            </span>
-                        </header>
-                    </li>
-                {% endfor %}
-            </ol>
-            {% endcomment %}
-
-            {% comment %} {{rubric_assessments}} {% endcomment %}
             <ol class="openassessment__steps">
                 {% for assessment in rubric_assessments %}
                {% if  assessment.name != "staff-assessment" %} 
                 <li style="padding: 0; border: none;" class="{{ assessment.class_id }} openassessment__steps__step is--loading">
-                    {% comment %} This header is loaded when loading {% endcomment %}
-                    <header class="step__header ui-slidable__container">
+                    {% comment %}  This header is loaded when loading {% endcomment %}
+                   {% comment %} <header class="step__header ui-slidable__container">
                         <h4 class="step__title">
                             <button class="ui-slidable" aria-expanded="false" aria-describedby="oa_step_status oa_step_deadline" disabled>
                                 <span class="step__counter"></span>
@@ -59,10 +67,14 @@
                               <span class="copy">{% trans "Loading" %}</span>
                             </span>
                         </span> 
-                    </header>
+                    </header>  {% endcomment %}
+                    
                 </li>
                 {% endif %} 
                 {% endfor %}
+                <div id="unique-loading">
+                    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                </div>
       
             </ol>
 
@@ -74,269 +86,3 @@
     <div class="sr reader-feedback" aria-live="polite"></div>
 </div>
 {% endspaceless %}
-
-<style>
-    .ui-widget-overlay.ui-front {
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        z-index: 1000;
-        background: transparent;
-    }
-
-    .ui-dialog.ui-widget.ui-widget-content {
-        z-index: 99999;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        border-radius: 4px;
-        padding: 20px;
-        background: #fff;
-    }
-
-    .ui-dialog.ui-widget.ui-widget-content .ui-dialog-titlebar.ui-widget-header {
-        border: none;
-        font-size: 5px 0 20px 0;
-        padding: 20px 0;
-        pointer-event: none;
-    }
-
-    .ui-dialog.ui-widget.ui-widget-content .dialog-confirm {
-        border: none;
-        padding: 0 0 20px 0;
-        line-height: 1.4;
-        font-size: 16px;
-    }
-
-    .ui-dialog.ui-widget.ui-widget-content .ui-dialog-buttonpane {
-        border: none;
-        padding: 10px 0 0 0;
-        margin: 0;
-        border-top: 0.5px solid #e5e5e5;
-    }
-
-    .ui-dialog.ui-widget.ui-widget-content .ui-dialog-buttonpane button {
-        font-size: 16px !important;
-        border-radius: 4px;
-        box-shadow: none !important;
-    }
-
-    .ui-dialog.ui-widget.ui-widget-content .ui-dialog-buttonpane button:active {
-        box-shadow: none !important;
-    }
-
-    .ui-dialog-buttonset button:first-of-type {
-        border: none !important;
-        background: #214e7b !important;
-        box-shadow: none !important;
-        text-shadow: none !important;
-        color: white !important;
-        margin-right: 20px;
-    }
-
-    .ui-dialog-buttonset button:first-of-type:hover {
-        background: #315e8b !important;
-    }
-
-
-    .file__description, .submission__answer__part__text__value {
-        overflow: auto !important;
-        border: 0.5px solid #23419f !important;
-        font-size: 15px !important;
-        font-weight: 500 !important;
-    }
-
-    .file__description::-webkit-scrollbar,
-    .submission__answer__part__text__value::-webkit-scrollbar {
-        width: 8px;
-    }
-    
-    .file__description::-webkit-scrollbar-track,
-    .submission__answer__part__text__value::-webkit-scrollbar-track {
-        background: #f1f1f1;
-    }
-    
-    .file__description::-webkit-scrollbar-thumb,
-    .submission__answer__part__text__value::-webkit-scrollbar-thumb {
-        background: #dbdbdb;
-        border-radius: 999px;
-        cursor: pointer;
-    }
-    
-    .file__description::-webkit-scrollbar-thumb:hover,
-    .submission__answer__part__text__value::-webkit-scrollbar-thumb:hover {
-        background: #bfbfbf;
-    }
-    
-    .file__description:focus,
-    .file__description:focus-visible,
-    .submission__answer__part__text__value:focus,
-    .submission__answer__part__text__value:focus-visible {
-        border-radius: 0;
-        outline: none;
-        box-shadow: none !important;
-        border: 2px solid #0075b4 !important;
-    }
-
-    {% comment %} submit button  {% endcomment %}
-    button.action.action--submit.step--response__submit {
-        margin: 0 !important;
-    }
-
-
-
-    ul.list.list--actions {
-        border-top: 0.5px solid #e5e5e5;
-        margin: 10px !important;
-        padding: 10px 0;
-    }
-
-    .list--actions__item {
-        display: flex;
-    }
-
-    .submission__upload__files__title {
-        padding-bottom: 5px !important;
-    }
-
-
-    {% comment %} error message  {% endcomment %}
-    .message.message--error.message--error-server.message--inline {
-        margin: 0;
-    }
-
-    .delete__uploaded__file {
-        background: transparent !important; 
-        border: none !important;  
-        color: #cf0000 !important;  
-        font-size: 15px !important;  
-        font-weight: 400 !important; 
-    }
-
-    .delete__uploaded__file:hover {
-        text-decoration: underline !important;
-    }
-
-    .submission__answer__display__file {
-        display: flex; 
-        align-items: center;
-    }
-
-    .submission__answer__file__block {
-        background: transparent;
-        padding: 0 20px !important;
-        border-radius: 4px !important;
-        margin: 0;
-        background: transparent;
-    }
-
-    #submission-in-review .submission__answer__file__block {
-        background: transparent !important; 
-        padding: 0 !important; 
-    }
-
-    .download-url-normal {
-        display: inline;
-    }
-
-    .download-url-inreview {
-        display: none;
-    }
-
-
-    #submission-in-review p {
-        border-left: 10px solid #222222;
-        border-right: 1px solid #222222;
-        border-top: 1px solid #222222;
-        border-bottom: 1px solid #222222;
-        padding: 10px 20px;
-        border-radius: 4px;
-        margin-top: 20px;
-    }
-
-    #submission-in-review .submission__answer__file {
-        display: inline-block;
-        padding: 8px 20px;
-        border: 1px solid #222222;
-        border-radius: 4px;
-    }
-
-    #submission-in-review .submission__answer__file:hover {
-        text-decoration: none;
-    }
-
-    #submission-in-review .submission__answer__file__block .download-url-normal {
-        display: none;
-    }
-
-    #submission-in-review .submission__answer__file__block .download-url-inreview {
-        display: inline;
-        color: #222222;
-        font-weight: 600;
-        font-size: 14px;
-    }
-
-
-    .openassessment__steps__step {
-        padding: 0 !important;
-        border: none !important;
-    }
-
-
-
-    .submission__file__description input {
-        height: 40px;
-        display: block;
-        background: #f9fbfd;
-        width: 100%;
-        border: 1px solid #6995d9 !important;
-        padding: 0;
-        padding: 0 10px;
-    }
-
-    button.file__upload {
-        padding: 0px 20px !important;
-        border: none !important;
-        border-radius: 0 !important;
-        background: #6094db !important;
-        color: white !important;
-        height: 40px !important;
-        display: flex !important;
-        align-items: center !important;
-        gap: 8px !important;
-        cursor: pointer;
-    }
-
-
-    button.file__upload svg {
-        width: 18px !important;
-    }
-
-    .submission__file__description__label {
-        font-size: 14px;
-        font-weight: 600 !important;
-    }
-
-    .disabled {
-        opacity: 0.6 !important;
-        pointer-events: none !important;
-    }
-
-    .submission__answer__part__text__title,
-    #oa-uploaded-file-divider
-    {
-        display: none;
-    }
-
-    .is--in-progress .submission__answer__part__text__title,
-    .is--in-progress #oa-uploaded-file-divider
-     {
-        display: block;
-    }
-
-    
-
-</style>

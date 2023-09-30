@@ -58,9 +58,13 @@
         </div> 
     </div> {% endcomment %}
 
+    <h5 id="submission-results-title"><strong>Submission Results</strong></h5>
+    <div class="step__message message message--complete">
+        <h5 id="submission-status-title" class="message__title">{% trans "In review" %}</h5>
+        <div class="message__content">Your submission is in review.</div>
+    </div> 
 
     <div id="submission-in-review">
-        <p>Submission In Review</p>
         {% include "openassessmentblock/oa_uploaded_file.html" with file_upload_type=file_upload_type file_urls=file_urls header=translated_header class_prefix="submission__answer" including_template="response_submitted" xblock_id=xblock_id %}
     </div>
 </div>

@@ -57,6 +57,7 @@
         {% endblock %}
     </header> {% endcomment %}
 
+    {% comment %} 
     <header class="step__header" style="margin-bottom: 60px !important;">
       {% if submission_start %}
       <span class="step__deadline">
@@ -72,7 +73,7 @@
           <span id="oa_step_deadline_response" class="date ora-datetime" data-datetime="{{ due_date }}" data-string="due {date} (in {{ time_until }})" data-timezone="{{ user_timezone }}" data-language="{{ user_language }}"></span>
           {% endblocktrans %}
       </span>
-      {% endif %}
+      {% endif %} {% endcomment %}
 
       
       {% comment %} {%  block title %}
@@ -81,9 +82,9 @@
               <span class="copy">{% trans "In Progress" %}</span>
           </span>
       </span>
-      {% endblock %} {% endcomment %}
+      {% endblock %} 
   </header>
-
+  {% endcomment %}
 
     {% block body %}
     <div class="ui-slidable__content" aria-labelledby="oa_response_{{ xblock_id }}" id="oa_response_{{ xblock_id }}_content">
@@ -177,26 +178,6 @@
                                 </article>
                                 {% endcomment %}
 
-
-                                {% if team_name %}
-                                  <div id='team_name_and_users'>
-                                      {% trans "You are on team " %}
-                                      <a href="{{team_url}}">{{team_name}}</a>.
-                                      {% trans "Team Members: " %}
-                                      <strong class="emphasis">{{team_usernames|join:", "}}.</strong>
-                                      {% if team_members_with_external_submissions %}
-                                        <br />
-                                        <strong class="emphasis">
-                                          {% blocktrans %}
-                                              {{team_members_with_external_submissions}}
-                                              have/has already submitted a response to this assignment with another team,
-                                              and will not be a part of your team's submission or assignment grade.
-                                          {% endblocktrans %}
-                                        </strong>
-                                      {% endif %}
-                                  </div>
-                                {% endif %}
-
                                 {% if text_response %}
                                 <div class="field field--textarea submission__answer__part__text">
                                     <div class="submission__answer__part__text">
@@ -246,17 +227,7 @@
                         {% endfor %}
 
                         {% if has_real_user %}
-                          {% if team_name and previous_team_name %}
-                              <div id='team_user_has_previous_submission'>
-                                  {% blocktrans %}
-                                      You are currently on Team {{team_name}}. Since you were on Team {{previous_team_name}}
-                                      when they submitted a response to this assignment, you are seeing Team {{previous_team_name}}’s
-                                      response and will receive the same grade for this assignment as your former teammates.
-                                      You will not be part of Team {{team_name}}’s submission for this assignment and will not
-                                      receive a grade for their submission.
-                                  {% endblocktrans %}
-                              </div>
-                          {% endif %}
+                      
                           {% if text_response %}
                           <li class="field">
                               <div class="response__submission__actions">
@@ -295,61 +266,12 @@
                                     </div>
                                 </div> 
 
-                                <style>
-                                  #oa-choose-file-btn-label {
-                                    display: flex;
-                                    align-items: center;
-                                    gap: 10px;
-                                    margin-bottom: 30px;
-                                    border: 1px solid #6995d9;
-                                    background: #f9fbfd;
-                                    width: 100% !important;
-                                    height: 40px !important;
-                                    position: static !important;
-                                  }
 
-                                  #oa-choose-file-btn {
-                                    font-weight: 400;
-                                    padding: 0 15px;
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    transition: .2s;
-                                    background: #6094db;
-                                    color: white;
-                                    fo: 100%;
-                                    outline: none;
-                                    border: none;
-                                    box-shadow: none;
-                                    height: 100%;
-                                  }
-
-                                  #choose-file-btn:hover {
-                                    background: rgb(0, 117, 180);
-                                    color: white;
-                                  }
-
-                                  #oa-chosen-file-name {
-                                    color: 
-                                    font-size: 15px;
-                                  }
-
-                                  .files__descriptions {
-                                    display: block !important;
-                                  }
-
-
-                                </style>
 
                                 <div class="oa-choose-file-container">
-                                  <h5 class="submission__upload__files__title">
-                                    {% trans "File Upload " %}
-                                    {% if file_upload_response == "required" %}
-                                      {% trans "(Required)" %}
-                                    {% elif file_upload_response == "optional" %}
-                                      {% trans "(Optional)" %}
-                                    {% endif %}
-                                  </h5>
+                                  <p style="padding-bottom: 5px; margin: 0; font-weight: 500; font-size: 14px;" class="submission__upload__files__title">
+                                    {% trans "File upload " %} {% trans "(required)" %}
+                                  </p>
   
                                   <label id="oa-choose-file-btn-label">
                                     <span id="oa-choose-file-btn">
@@ -359,16 +281,6 @@
                                     <input style="width: 0; height: 0; overflow: hidden; display: block;" type="file" class="submission__answer__upload file--upload" id="submission_answer_upload_{{ xblock_id }}" {% if allow_multiple_files %}multiple=""{% endif %} accept="{{white_listed_file_types|join:", "}}">
                                   </label> 
                                 </div>
-
-                                <div class="files__descriptions" >
-                                  <div class='submission__file__description__label'>
-                                    Describe your file (required):
-                                    <div class="submission__file__description">
-                                      <input aria-label="" class="file__description file__description__0" />
-                                    </div>
-                                  </div>
-                                </div>
-
 
                                 <div id="oa-upload-file-btn-container">
                                   <button style="float: none;" type="submit" class="file__upload action action--upload disabled">
@@ -464,13 +376,3 @@
   </li>
 {% endspaceless %}
 
-
-<script>
-  const fileUploaded = document.querySelector(".submission__answer__file__block a");
-  
-  if (fileUploaded) {
-    document.querySelector('.oa-choose-file-container').classList.add('disabled');
-    document.querySelector('.files__descriptions').classList.add('disabled');
-    document.querySelector(".step__actions button[type=submit]").classList.remove('disabled');
-  }
-</script>

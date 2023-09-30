@@ -19,11 +19,12 @@
   }
 
   // STATE: hover
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     color: $action-primary-color-focus;
   }
 
-//   actual tooltip rendered
+  //   actual tooltip rendered
   &:after {
     @include left(0);
     display: block;
@@ -36,4 +37,16 @@
     @include left(0);
     @include margin-left(-($baseline-v));
   }
+
+  &.hint--left:after {
+    @include left(0);
+    transform: translateX(-100%);
+    @include margin-left(-($baseline-v));
+  }
+
+  &.hint--left:before {
+    transform: translateX(-20px);
+  }
+
+
 }

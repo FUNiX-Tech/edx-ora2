@@ -44,13 +44,16 @@
   }
 
   // STATE: hover and focus
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     @include transform(scale(1.0));
   }
 
   // don't zoom on hover/focus when step has error
   &.has--error {
-    &:hover, &:focus {
+
+    &:hover,
+    &:focus {
       @include transform(scale(.99));
     }
   }
@@ -70,7 +73,8 @@
   // STATE: is empty
   &.is--empty {
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       @include transform(scale(0.99));
     }
   }
@@ -79,7 +83,8 @@
   &.is--unavailable {
     border-top-color: $color-unavailable;
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       @include transform(scale(0.99));
     }
   }
@@ -106,7 +111,8 @@
   }
 
   // STATE: is incomplete
-  &.is--closed, &.is--incomplete {
+  &.is--closed,
+  &.is--incomplete {
     border-top-color: $color-incomplete;
   }
 }
@@ -140,8 +146,10 @@
 // --------------------
 %ui-well {
   @include single-box-shadow(0, 1px, 2px, 1px, $shadow-l1, inset);
-  padding: $baseline-v ($baseline-h/2);
-  background: $color-decorative-quinternary;
+  padding: $baseline-v (
+    $baseline-h/2
+  );
+background: $color-decorative-quinternary;
 }
 
 
@@ -241,7 +249,8 @@
   margin-bottom: $baseline-v;
   @include margin-left(($baseline-h/2));
 
-  .answer, .answer--feedback {
+  .answer,
+  .answer--feedback {
     @include row();
     @extend %wipe-last-child;
     margin-bottom: ($baseline-v/2);
@@ -252,7 +261,8 @@
   .wrapper--input {
     margin-bottom: ($baseline-v/4);
 
-    .answer__value, .answer__label {
+    .answer__value,
+    .answer__label {
       display: inline-block;
       vertical-align: middle;
     }
@@ -270,7 +280,7 @@
       // STATE: checked
       &:checked {
 
-        + .answer__label {
+        +.answer__label {
           color: $selected-color;
         }
       }
@@ -296,7 +306,8 @@
     }
   }
 
-  .answer__tip, .answer__points {
+  .answer__tip,
+  .answer__points {
     display: block;
   }
 

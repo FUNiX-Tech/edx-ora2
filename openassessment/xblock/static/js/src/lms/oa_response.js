@@ -37,6 +37,12 @@ export class ResponseView {
 
   ICON_ERROR = 'fa-exclamation-circle';
 
+  SVG_CHECK = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+</svg>`;
+
+  FILE_DESCRIPTION = 'submission'
+
   constructor(element, server, fileUploader, responseEditorLoader, baseView, data) {
     this.element = element;
     this.server = server;
@@ -48,7 +54,6 @@ export class ResponseView {
     this.textResponseEditor = 'text';
     this.fileUploadResponse = '';
     this.files = null;
-    this.filesDescriptions = [];
     this.fileNames = [];
     this.filesType = null;
     this.lastChangeTime = Date.now();
@@ -86,6 +91,9 @@ export class ResponseView {
           view.baseView.announceStatusChangeToSRandFocus(stepID, usageID, false, view, focusID);
           view.announceStatus = false;
           view.dateFactory.apply();
+
+
+
         });
       },
     ).fail(() => {
@@ -177,16 +185,14 @@ export class ResponseView {
     this.confirmationDialog = new ConfirmationAlert(sel.find('.step--response__dialog-confirm'));
 
 
-    sel.find('.file__description').on('input', (eventObject) => {
-      const hasFile = sel.find('.submission__answer__upload').prop('files')[0];
-      const hasDesc = eventObject.target.value.trim();
+    // button states
+    const fileUploaded = $('.submission__answer__file__block a', view.element);
 
-      if (hasFile && hasDesc) {
-        $(".file__upload", this.element).removeClass("disabled");
-      } else {
-        $(".file__upload", this.element).addClass("disabled");
-      }
-    });
+    if (fileUploaded.length) {
+      $('.oa-choose-file-container', view.element).addClass('disabled');
+      $('.step__actions button[type=submit]', view.element).removeClass('disabled');
+
+    }
   }
 
   /**
@@ -258,7 +264,6 @@ export class ResponseView {
     }
 
     if (this.hasPendingUploadFiles()) {
-      this.collectFilesDescriptions();
       this.baseView.toggleActionError(
         'submit',
         gettext(
@@ -341,13 +346,7 @@ export class ResponseView {
       );
       return false;
     }
-    if (!this.collectFilesDescriptions()) {
-      this.baseView.toggleActionError(
-        'upload',
-        gettext('Please provide a description for each file you are uploading.'),
-      );
-      return false;
-    }
+
     for (let i = 0; i < this.files?.length; i++) {
       const file = this.files[i];
       if (file.size === 0) {
@@ -638,7 +637,7 @@ export class ResponseView {
       }
     }
 
-    this.updateFilesDescriptionsFields(files, descriptions);
+    this.udpateButtonsState(files);
   }
 
   isUploadSupported = (file) => {
@@ -651,76 +650,22 @@ export class ResponseView {
 
     */
   /* jshint -W083 */
-  updateFilesDescriptionsFields(files, descriptions) {
+  udpateButtonsState(files) {
 
-    this.filesDescriptions = descriptions || [];
     this.fileNames = [];
-
-    const i = 0;
-
-    const input = $(this.element).find('.file__description__0').first();
-    const ariaLabel = files[0] ? gettext('Describe ') + files[i].name : 'Describe '
-    input.attr('aria-label', ariaLabel);
-
     const hasFile = files[0];
-    const hasDescription = input.val().trim();
-
-    if (hasFile && hasDescription) {
-      $(this.element).find('.file__upload').first().removeClass('disabled');
-    } else {
-      $(this.element).find('.file__upload').first().addClass('disabled');
-    }
 
     if (hasFile) {
+      $(this.element).find('.file__upload').first().removeClass('disabled');
       $(this.element).find('#oa-chosen-file-name').first().html(files[0].name);
+
     } else {
+      $(this.element).find('.file__upload').first().addClass('disabled');
       $(this.element).find('#oa-chosen-file-name').first().html('No file chosen');
     }
 
-    if (this.isUploadSupported(files[0])) {
-      $(this.element).find('.files__descriptions').first().removeClass('disabled');
-    } else {
-      $(this.element).find('.files__descriptions').first().addClass('disabled');
-    }
-
   }
 
-  /**
-    * Called when user updates a file description field:
-    * Check that file descriptions exist for all to-be-uploaded files and enable/disable upload button
-    * If successful (each file has a non-empty description), save file descriptions to page state
-    *
-    * @returns {boolean} true if file descriptions were found for each upload (passes validation)
-    * or false in the event of an error
-    */
-  collectFilesDescriptions() {
-    let isError = false;
-    const filesDescriptions = [];
-
-    $(this.element).find('.file__description').each(function () {
-      const filesDescriptionVal = $.trim($(this).val());
-      if (filesDescriptionVal) {
-        filesDescriptions.push(filesDescriptionVal);
-      } else {
-        isError = true;
-      }
-    });
-
-    if (!isError) {
-      this.filesDescriptions = filesDescriptions;
-    }
-
-    return !isError;
-  }
-
-  /**
-    Clear field with files descriptions.
-
-    */
-  removeFilesDescriptions() {
-    const filesDescriptions = $(this.element).find('.files__descriptions').first();
-    // $(filesDescriptions).hide().html('');
-  }
 
   /**
     Returns the number of file blocks rendered on the page. includeDeleted is necessary in
@@ -761,24 +706,11 @@ export class ResponseView {
       block.html('');
       block.prop('deleted', true);
       sel.find('.step__actions button[type=submit]').addClass("disabled");
-      sel.find('.files__descriptions').removeClass('disabled');
       sel.find('.file__upload').addClass('disabled');
       sel.find('.oa-choose-file-container').removeClass('disabled');
     }).fail((errMsg) => {
       this.baseView.toggleActionError('delete', errMsg);
     });
-  }
-
-  /**
-    * Given a filenum, look up the block for that filenum and return the text displayed
-    * '<file_description> (<filename>)'
-    */
-  getFileNameAndDescription(filenum) {
-    const fileBlock = $(this.baseView.element).find(`.submission__answer__file__block__${filenum} > a`);
-    if (fileBlock.length) {
-      return fileBlock[0].text.trim();
-    }
-    return '';
   }
 
   /**
@@ -789,18 +721,18 @@ export class ResponseView {
     const view = this;
     const sel = $('.step--response', this.element);
     const fileMetaData = [];
-    for (let i = 0; i < this.filesDescriptions.length; i++) {
-      this.fileNames.push(this.files[i].name);
-      const entry = {
-        description: this.filesDescriptions[i],
-        fileName: this.files[i].name,
-        fileSize: this.files[i].size,
-      };
-      fileMetaData.push(entry);
-    }
+
+    this.fileNames.push(this.files[0].name);
+    const entry = {
+      description: this.FILE_DESCRIPTION,
+      fileName: this.files[0].name,
+      fileSize: this.files[0].size,
+    };
+    fileMetaData.push(entry);
+
     return this.server.saveFilesDescriptions(fileMetaData).done(
       () => {
-        view.removeFilesDescriptions();
+        console.log("Saved file description.")
       },
     ).fail((errMsg) => {
       view.baseView.toggleActionError('upload', errMsg);
@@ -843,7 +775,12 @@ export class ResponseView {
       view.baseView.toggleActionError('upload', errMsg);
       sel.find('input.file--upload').val(null);
       sel.find('#oa-chosen-file-name').html('No file chosen');
+      $('.oa-choose-file-container', this.element).removeClass("disabled");
     };
+
+    $('#uploading-file', this.element).css("display", "block");
+    $('.oa-choose-file-container', this.element).addClass("disabled");
+    $('.file__upload', this.element).addClass("disabled");
 
     // Call getUploadUrl to get the one-time upload URL for this file. Once
     // completed, execute a sequential AJAX call to upload to the returned
@@ -858,16 +795,39 @@ export class ResponseView {
             if (finalUpload) {
               sel.find('input[type=file]').val('');
               sel.find('.step__actions button[type=submit]').removeClass("disabled");
-              sel.find('.file__description').val('');
-              sel.find('.files__descriptions').addClass("disabled");
-              sel.find('.oa-choose-file-container').addClass("disabled");
-              sel.find('.file__upload').addClass("disabled");
               sel.find('#oa-chosen-file-name').html('No file chosen');
+              $('#uploading-file', this.element).css("display", "none");
+
               view.filesUploaded = true;
             }
           }).fail(handleError);
       },
     ).fail(handleError);
+  }
+
+  createSvgEle() {
+    var svgElement = $('<svg />');
+
+    svgElement.attr({
+      xmlns: "http://www.w3.org/2000/svg",
+      fill: "none",
+      viewBox: "0 0 24 24",
+      "stroke-width": "1.5",
+      stroke: "currentColor",
+      class: "w-6 h-6"
+    });
+
+    var pathElement = $('<path />');
+
+    pathElement.attr({
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round",
+      d: "M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+    });
+
+    svgElement.append(pathElement);
+
+    return svgElement;
   }
 
   /**
@@ -877,12 +837,11 @@ export class ResponseView {
     const view = this;
     const sel = $('.step--response', this.element);
     const uploadBtn = $('#oa-upload-file-btn', this.element);
-    const filesDescriptions = $('.files__descriptions', this.element);
     const chooseFileContainer = $('#oa-choose-file-container', this.element);
 
     view.server.getDownloadUrl(filenum).done((url) => {
       const className = `submission__answer__file__block__${filenum}`;
-      let file = null;
+      let anchor = null;
       let fileBlock = null;
       const fileBlockExists = !!sel.find(`.${className}`).length;
       let button = null;
@@ -894,16 +853,15 @@ export class ResponseView {
       }
 
 
-      const description = view.filesDescriptions[filenum - view.fileCountBeforeUpload];
-      const fileName = view.fileNames[filenum - view.fileCountBeforeUpload];
-      file = $('<a />', {
-        href: url,
-        text: `${description} (${fileName})`,
-      });
-      file.addClass('submission__answer__file submission--file');
-      file.attr('target', '_blank');
-      file.appendTo(fileBlock);
+      anchor = $('<a />', { href: url });
+      anchor.addClass('submission__answer__file submission--file');
+      anchor.attr('target', '_blank');
+      anchor.appendTo(fileBlock);
 
+      const fileName = view.fileNames[filenum - view.fileCountBeforeUpload];
+      const span = $('<span />', { class: 'download-url-normal' });
+      span.html(this.SVG_CHECK + `${fileName}`)
+      span.appendTo(anchor);
 
       button = $('<button />');
       button.text('Delete File');
@@ -916,7 +874,6 @@ export class ResponseView {
       button.appendTo(fileBlock);
 
       uploadBtn.addClass('disabled');
-      filesDescriptions.addClass('disabled')
       chooseFileContainer.addClass('disabled');
 
       return url;

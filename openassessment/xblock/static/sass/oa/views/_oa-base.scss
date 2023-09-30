@@ -93,6 +93,10 @@
   .openassessment__steps__step {
     @extend %ui-section;
 
+    padding: 0 !important;
+    border: none !important;
+    transform: none !important;
+
     // step title
     .step__title {
       display: inline;
@@ -245,9 +249,9 @@
 
     // step content wrapper
     .wrapper--step__content {
-      margin-top: ($baseline-v/2);
-      padding-top: ($baseline-v/2);
-      border-top: 1px solid $color-decorative-tertiary;
+      // margin-top: ($baseline-v/2);
+      // padding-top: ($baseline-v/2);
+      // border-top: 1px solid $color-decorative-tertiary;
     }
 
     // step message
@@ -583,8 +587,20 @@
   }
 
   .submission__answer__file__block {
-    margin-bottom: 8px;
+    margin: 0;
+    padding: 0 !important;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
+
+  #submission-in-review .submission__answer__file__block {
+    background: transparent !important;
+    padding: 0 !important;
+  }
+
+
 
   .submission__img__preview {
     float: left;
@@ -608,14 +624,6 @@
 
       label {
         @extend %text-sr;
-      }
-
-      .files__descriptions {
-        // display: none;
-
-        .submission__file__description {
-          padding-bottom: 10px;
-        }
       }
 
       .submission__answer__part__text {
@@ -1187,4 +1195,350 @@ border-radius: ($baseline-v/10);
   @extend %action-2;
   @include margin-right(($baseline-v/2));
 }
+}
+
+
+// uuuuv
+button.file__upload {
+  padding: 0px 20px !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: #6094db !important;
+  color: white !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  cursor: pointer;
+}
+
+
+button.file__upload svg {
+  width: 18px !important;
+}
+
+#oa-choose-file-btn-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+  border: 1px solid #6995d9;
+  background: #f9fbfd;
+  width: 100% !important;
+  height: 40px !important;
+  position: static !important;
+  cursor: pointer;
+}
+
+#oa-choose-file-btn {
+  font-weight: 400;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: .2s;
+  background: #6094db;
+  color: white;
+  fo: 100%;
+  outline: none;
+  border: none;
+  box-shadow: none;
+  height: 100%;
+}
+
+#choose-file-btn:hover {
+  background: rgb(0, 117, 180);
+  color: white;
+}
+
+#oa-chosen-file-name {
+  font-size: 15px;
+}
+
+.disabled {
+  opacity: 0.6 !important;
+  pointer-events: none !important;
+}
+
+
+.submission__file__description input {
+  height: 40px;
+  display: block;
+  background: #f9fbfd;
+  width: 100%;
+  border: 1px solid #6995d9 !important;
+  padding: 0;
+  padding: 0 10px;
+}
+
+
+#submission-in-review p {
+  border-left: 10px solid #222222;
+  border-right: 1px solid #222222;
+  border-top: 1px solid #222222;
+  border-bottom: 1px solid #222222;
+  padding: 10px 20px;
+  border-radius: 4px;
+  margin-top: 20px;
+}
+
+.message.message--error.message--error-server.message--inline {
+  margin: 0;
+}
+
+.list--actions__item {
+  display: flex !important;
+}
+
+.ui-dialog.ui-widget.ui-widget-content {
+  z-index: 99999;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 4px;
+  padding: 20px;
+  background: #fff;
+}
+
+.ui-dialog.ui-widget.ui-widget-content .ui-dialog-titlebar.ui-widget-header {
+  border: none;
+  font-size: 5px 0 20px 0;
+  padding: 20px 0;
+  pointer-event: none;
+}
+
+.ui-dialog.ui-widget.ui-widget-content .dialog-confirm {
+  border: none;
+  padding: 0 0 20px 0;
+  line-height: 1.4;
+  font-size: 16px;
+}
+
+.ui-dialog.ui-widget.ui-widget-content .ui-dialog-buttonpane {
+  border: none;
+  padding: 10px 0 0 0;
+  margin: 0;
+  border-top: 0.5px solid #e5e5e5;
+}
+
+.ui-dialog.ui-widget.ui-widget-content .ui-dialog-buttonpane button {
+  font-size: 16px !important;
+  border-radius: 4px;
+  box-shadow: none !important;
+}
+
+.ui-dialog.ui-widget.ui-widget-content .ui-dialog-buttonpane button:active {
+  box-shadow: none !important;
+}
+
+.ui-dialog-buttonset button:first-of-type {
+  border: none !important;
+  background: #214e7b !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  color: white !important;
+  margin-right: 20px;
+}
+
+.ui-dialog-buttonset button:first-of-type:hover {
+  background: #315e8b !important;
+}
+
+
+.file__description,
+.submission__answer__part__text__value {
+  overflow: auto !important;
+  border: 0.5px solid #23419f !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+}
+
+.file__description::-webkit-scrollbar,
+.submission__answer__part__text__value::-webkit-scrollbar {
+  width: 8px;
+}
+
+.file__description::-webkit-scrollbar-track,
+.submission__answer__part__text__value::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.file__description::-webkit-scrollbar-thumb,
+.submission__answer__part__text__value::-webkit-scrollbar-thumb {
+  background: #dbdbdb;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.file__description::-webkit-scrollbar-thumb:hover,
+.submission__answer__part__text__value::-webkit-scrollbar-thumb:hover {
+  background: #bfbfbf;
+}
+
+.file__description:focus,
+.file__description:focus-visible,
+.submission__answer__part__text__value:focus,
+.submission__answer__part__text__value:focus-visible {
+  border-radius: 0;
+  outline: none;
+  box-shadow: none !important;
+  border: 2px solid #0075b4 !important;
+}
+
+button.action.action--submit.step--response__submit {
+  margin: 0 !important;
+}
+
+ul.list.list--actions {
+  border-top: 0.5px solid #e5e5e5;
+  margin: 10px !important;
+  padding: 10px 0;
+}
+
+.download-url-normal {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 20px;
+}
+
+.download-url-normal svg {
+  width: 20px;
+  color: green;
+}
+
+.download-url-inreview {
+  display: none;
+}
+
+#submission-in-review .submission__answer__file__block .download-url-normal {
+  display: none;
+}
+
+#submission-in-review .submission__answer__file__block .download-url-inreview {
+  color: #222222;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+#submission-in-review .submission__answer__file__block .submission__answer__file {
+  height: 40px;
+  border: 1px solid #0a3055;
+  display: flex;
+  align-items: center;
+  // padding: 0 20px;
+  border-radius: 4px;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.ui-widget-overlay.ui-front {
+  position: fixed !important;
+  background: transparent !important;
+  background-image: none !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 0 !important;
+  bottom: 0 !important;
+}
+
+// accordion graded rubric 
+.question__title.ui-slidable__control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #dfdfdf !important;
+  border-bottom: none !important;
+  margin: 0 !important;
+  padding: 0 15px !important;
+  cursor: pointer;
+}
+
+.question__title.ui-slidable__control::before,
+.question__title.ui-slidable__control::after {
+  display: none !important;
+}
+
+.question__title.ui-slidable__control span {
+  color: #4d4d4d !important;
+}
+
+.question.ui-slidable__container {
+  margin: 0 !important;
+}
+
+// first loading 
+#unique-loading {
+  display: none;
+}
+
+.openassessment__steps__step.is--loading~#unique-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+}
+
+.openassessment__steps__step.is--loading * {
+  display: none;
+}
+
+// spinner 
+.lds-ring {
+  display: inline-block;
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  margin: 4px;
+  border: 4px solid #fff;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #000000 transparent transparent transparent;
+}
+
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+#submission-results-title {
+  font-size: 16px;
+  padding: 0 0 20px 0;
+}
+
+#submission-status-title {
+  border-bottom: 1px solid #38c738 !important;
 }
