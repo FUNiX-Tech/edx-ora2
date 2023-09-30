@@ -58,7 +58,8 @@
         </div> 
     </div> {% endcomment %}
 
-    <h5 id="submission-results-title"><strong>Submission Results</strong></h5>
+    <h5 style="padding: 10px 0 20px;"><strong>Submission Results</strong></h5>
+    <p id="submission-date" style="font-size: 14px; margin: 0 0 10px 0;">Submission date: {{student_submission.submitted_at}}</p>
     <div class="step__message message message--complete">
         <h5 id="submission-status-title" class="message__title">{% trans "In review" %}</h5>
         <div class="message__content">Your submission is in review.</div>
