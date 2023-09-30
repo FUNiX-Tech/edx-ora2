@@ -51,7 +51,7 @@
                {% if  assessment.name != "staff-assessment" %} 
                 <li style="padding: 0; border: none;" class="{{ assessment.class_id }} openassessment__steps__step is--loading">
                     {% comment %}  This header is loaded when loading {% endcomment %}
-                   {% comment %} <header class="step__header ui-slidable__container">
+                 <header class="step__header ui-slidable__container">
                         <h4 class="step__title">
                             <button class="ui-slidable" aria-expanded="false" aria-describedby="oa_step_status oa_step_deadline" disabled>
                                 <span class="step__counter"></span>
@@ -67,7 +67,7 @@
                               <span class="copy">{% trans "Loading" %}</span>
                             </span>
                         </span> 
-                    </header>  {% endcomment %}
+                    </header>
                     
                 </li>
                 {% endif %} 

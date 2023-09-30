@@ -611,6 +611,9 @@ class GradeMixin:
         score = workflow['score']
         complete = score is not None
 
+        if not complete:
+            return ""
+
 
         sentences = {
             "passed": _("Submission Passed."),
