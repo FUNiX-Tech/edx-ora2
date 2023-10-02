@@ -50,9 +50,11 @@ def get_version(*file_paths):
 
 VERSION = get_version("openassessment", "__init__.py")
 
+PROJECT_NAME = 'funixora2'
+VERSION = '0.0.1-beta'
 
 setup(
-    name='ora2',
+    name=PROJECT_NAME,
     version=VERSION,
     author='edX',
     author_email='oscm@edx.org',
@@ -62,10 +64,10 @@ setup(
     long_description=README,
     long_description_content_type='text/x-rst',
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
+        'Development Status :: 1 - Planning',
         'Framework :: Django :: 3.2',
         'Framework :: Django :: 4.2',
-        'Intended Audience :: Developers',
+        'Intended Audience :: Customer Service',
         'License :: OSI Approved :: GNU Affero General Public License v3',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3',
