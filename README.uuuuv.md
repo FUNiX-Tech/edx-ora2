@@ -1,5 +1,12 @@
 # ORA installation
 
+## pypi
+
+1. replace `ora2` with `funixora2 0.0.2b0` in the `requirements.txt` file of the `edx-platform`
+2. If encoutering the error `TypeError: unsupported operand type(s) for +: 'frozenset' and 'list'`, refer to the end section of this file.
+
+## dev
+
 There are too much version confilictings when running `make install`:pout:
 
 The devstack containers must be running before the following steps (`make dev.up`)

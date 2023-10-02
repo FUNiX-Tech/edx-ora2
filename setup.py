@@ -51,7 +51,7 @@ def get_version(*file_paths):
 VERSION = get_version("openassessment", "__init__.py")
 
 PROJECT_NAME = 'funixora2'
-VERSION = '0.0.1-beta'
+VERSION = '0.0.2-beta'
 
 setup(
     name=PROJECT_NAME,
