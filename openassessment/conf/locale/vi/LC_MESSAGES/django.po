@@ -2531,3 +2531,84 @@ msgstr ""
 #: xblock/utils/validation.py:379
 msgid "The submission format is invalid."
 msgstr "Các định dạng cảu bài gửi không hợp lệ."
+
+
+#####################################################
+#####################################################
+################### funix ###########################
+#####################################################
+#####################################################
+
+#:::::::::::: general ::::::::::::#
+msgid "Estimated Completion Time"
+msgstr "Thời gian dự kiến hoàn thành"
+
+msgid "Submission Results"
+msgstr "Kết quả bài nộp"
+
+
+msgid "Submission Date"
+msgstr "Ngày nộp bài"
+
+msgid "Submission Did Not Pass"
+msgstr "Bài nộp không đạt"
+
+msgid "Submission Passed"
+msgstr "Bài nộp đạt"
+
+msgid "Submission In Review"
+msgstr "Bài nộp đang được chấm"
+
+msgid "Download Submission"
+msgstr "Tải bài nộp"
+
+msgid "Are there any areas you would like your reviewer to pay particular attention to?"
+msgstr "Có vấn đề nào trong bài nộp bạn muốn mentor đặc biệt chú ý đến không?"
+
+msgid "Browse"
+msgstr "Chọn file"
+
+msgid "No file chosen"
+msgstr "Chưa có file nào được chọn"
+
+msgid "Delete"
+msgstr "Xóa"
+
+msgid "Feedback Details"
+msgstr "Đánh giá của mentor"
+
+msgid "Reviewer Note"
+msgstr "Đánh giá tổng quan"
+
+msgid "Submission Details"
+msgstr "Ghi chú"
+
+msgid "week"
+msgstr "tuần"
+
+msgid "day"
+msgstr "ngày"
+
+msgid "hour"
+msgstr "giờ"
+
+msgid "minute"
+msgstr "phút"
+
+msgid "weeks"
+msgstr "tuần"
+
+msgid "days"
+msgstr "ngày"
+
+msgid "hours"
+msgstr "giờ"
+
+msgid "minutes"
+msgstr "phút"
+
+
+
+
+
+

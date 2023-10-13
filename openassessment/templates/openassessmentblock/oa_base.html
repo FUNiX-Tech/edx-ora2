@@ -1,88 +1,83 @@
-{% load i18n %}
-{% load oa_extras %}
-{% spaceless %}
+{% load i18n %} {% load oa_extras %} {% spaceless %}
 
 <div class="wrapper wrapper--xblock wrapper--openassessment theme--basic">
-    <div class="openassessment problem">
-        <div class="wrapper--grid">
-            <div 
-                id="assignment-header"
-                style="
-                    border-bottom: 1px solid #e5e5e5;
-                    padding: 20px 0;
-                    margin-bottom: 50px;
-                "
-            >
-                {% if title %}
-                    <h3 
-                        style="
-                            font-size: 25px; 
-                            font-weight: 600; 
-                            margin-bottom: 10px;
-                        " 
-                        class="openassessment__title problem__header"
-                    >
-                    {% trans title %}
-                    </h3>
-                {% endif %}
+  <div class="openassessment problem">
+    <div class="wrapper--grid">
+      <div id="assignment-header">
+        {% if title %}
+        <h3 id="assignment-title" class="openassessment__title problem__header"><strong>{% trans title %}</strong></h3>
+        {% endif %}
 
-            <div style="
-                align-items: center;
-                display: flex;
-                font-size: 14px;
-                " 
-                id="estimated-time"
-            >
-                <p style="
-                    background: #fff0d7;
-                    padding: 0px 10px;
-                    border-radius: 3px;
-                    border: 1px solid #ebd1a6;
-                    margin: 0;
-                ">
-                    <span>Estimated Completion Time: </span><span >{{ estimated_time|beautiful_minutes }}</span>
-                </p>
-            </div>
-            </div>
-            
-
-            <ol class="openassessment__steps">
-                {% for assessment in rubric_assessments %}
-               {% if  assessment.name != "staff-assessment" %} 
-                <li style="padding: 0; border: none;" class="{{ assessment.class_id }} openassessment__steps__step is--loading">
-                    {% comment %}  This header is loaded when loading {% endcomment %}
-                 <header class="step__header ui-slidable__container">
-                        <h4 class="step__title">
-                            <button class="ui-slidable" aria-expanded="false" aria-describedby="oa_step_status oa_step_deadline" disabled>
-                                <span class="step__counter"></span>
-                                <span class="wrapper--copy">
-                                    <span class="step__label">{% trans assessment.title %}</span>
-                                </span>
-                            </button>
-                        </h4>
-
-                       <span class="step__status">
-                            <span id="oa_step_status" class="step__status__value">
-                              <span class="icon fa fa-spinner fa-spin" aria-hidden="true"></span>
-                              <span class="copy">{% trans "Loading" %}</span>
-                            </span>
-                        </span> 
-                    </header>
-                    
-                </li>
-                {% endif %} 
-                {% endfor %}
-                <div id="unique-loading">
-                    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
-                </div>
-      
-            </ol>
-
-            {% if show_staff_area %}
-                <div class="openassessment__staff-area"></div>
-            {% endif %}
+        <div
+          style="align-items: center; display: flex; font-size: 14px"
+          id="estimated-time"
+        >
+          <p
+            style="
+              background: #fff0d7;
+              padding: 0px 10px;
+              border-radius: 3px;
+              border: 1px solid #ebd1a6;
+              margin: 0;
+            "
+          >
+            <span>{% trans "Estimated Completion Time" %}: </span>
+            <span>{{ estimated_time|beautiful_minutes }}</span>
+          </p>
         </div>
+      </div>
+
+      <ol class="openassessment__steps">
+        {% for assessment in rubric_assessments %} 
+        {% if assessment.name != "staff-assessment" %}
+        <li
+          style="padding: 0; border: none"
+          class="{{ assessment.class_id }} openassessment__steps__step is--loading"
+        >
+          {% comment %} This header is loaded when loading {% endcomment %}
+          <header class="step__header ui-slidable__container">
+            <h4 class="step__title">
+              <button
+                class="ui-slidable"
+                aria-expanded="false"
+                aria-describedby="oa_step_status oa_step_deadline"
+                disabled
+              >
+                <span class="step__counter"></span>
+                <span class="wrapper--copy">
+                  <span class="step__label">{% trans assessment.title %}</span>
+                </span>
+              </button>
+            </h4>
+
+            <span class="step__status">
+              <span id="oa_step_status" class="step__status__value">
+                <span
+                  class="icon fa fa-spinner fa-spin"
+                  aria-hidden="true"
+                ></span>
+                <span class="copy">{% trans "Loading" %}</span>
+              </span>
+            </span>
+          </header>
+        </li>
+        {% endif %} 
+        {% endfor %}
+        <div id="unique-loading">
+          <div class="lds-ring">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+      </ol>
+
+      {% if show_staff_area %}
+      <div class="openassessment__staff-area"></div>
+      {% endif %}
     </div>
-    <div class="sr reader-feedback" aria-live="polite"></div>
+  </div>
+  <div class="sr reader-feedback" aria-live="polite"></div>
 </div>
 {% endspaceless %}

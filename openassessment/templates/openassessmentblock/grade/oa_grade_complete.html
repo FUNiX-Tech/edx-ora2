@@ -1,43 +1,44 @@
+
+
+
 {% load i18n %}
 {% spaceless %}
     <li id="openassessment__grade__{{ xblock_id }}" class="openassessment__steps__step step--grade is--complete is--showing has--grade {% if allow_latex %}allow--latex{% endif %}" tabindex="-1">
-        {% comment %} <header class="step__header ui-slidable__control">
-            <span>
-                <h4 class="step__title">
-                    <span class="wrapper--copy">
-                        {% if score %}
-                            <span id="oa_step_title_grade" class="step__label">{% trans "Your Grade" %}: </span>
-                            <span class="grade__value">
-                                <span class="grade__value__title">
-                                    {% with points_earned_string=score.points_earned|stringformat:"s" points_possible_string=score.points_possible|stringformat:"s" %}
-                                        {% blocktrans with points_earned='<span class="grade__value__earned">'|safe|add:points_earned_string|add:'</span>'|safe points_possible='<span class="grade__value__potential">'|safe|add:points_possible_string|add:'</span>'|safe %}
-                                            {{ points_earned }} out of {{ points_possible }}
-                                        {% endblocktrans %}
-                                    {% endwith %}
-                                </span>
-                            </span>
-                        {% else %}
-                            <span id="oa_step_title" class="step__label">{% trans "Your Grade" %}</span>
-                        {% endif %}
-                    </span>
-                </h4>
-            </span>
-        </header> {% endcomment %}
+
         
         <div class="ui-slidable__content" id="oa_grade_{{ xblock_id }}_content" aria-labelledby="oa_grade_{{ xblock_id }}">
             <div class="wrapper--step__content">
                 <div class="step__content">
-                    <article class="submission__answer__display step__content__section">
-                        <h5 style="padding: 10px 0 20px;"><strong>Submission Results</strong></h5>
+                    <article style="margin: 0 0 80px 0;" class="submission__answer__display step__content__section">
+                        
 
-                        <p id="submission-date" style="font-size: 14px; margin: 0 0 10px 0;">Submission date: {{student_submission.submitted_at}}</p>
 
-                        <div class="step__message message message--complete">
-                            <h5 id="submission-status-title" class="message__title">
-                                {% trans "Graded" %}
-                            </h5>
-                            {% comment %} <div class="message__content">{{ score_explanation }}</div> {% endcomment %}
-                        </div> 
+                        <h5 id="submission-results-title"><strong>{% trans "Submission Results" %}</strong></h5>
+
+                        <p id="submission-date" >{% trans "Submission Date" %}: {{student_submission.submitted_at}}</p>
+                        
+                        {% if score %}
+                            {% if  score.points_earned == score.points_possible %}
+                                <div id="submission-state" class="submission-passed">
+                                    <p>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 criterion-result-icon passed">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </p>
+                                    <p>{% trans "Submission Passed" %}</p>
+                                </div>
+                            {% else %}
+                                <div id="submission-state" class="submission-did-not-pass">
+                                    <p>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 criterion-result-icon failed">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                                        </svg>
+                                    </p>
+                                    <p>{% trans "Submission Did Not Pass" %}</p>
+                                </div>
+                                
+                            {% endif %}
+                        {% endif %}
 
                         <div id="submission-in-review">
                         {% include "openassessmentblock/oa_uploaded_file.html" with file_upload_type=file_upload_type file_urls=file_urls header=translated_header class_prefix="submission__answer" including_template="grade_complete" xblock_id=xblock_id %}
@@ -45,13 +46,13 @@
                     </article>
 
                     <article class="submission__peer-evaluations step__content__section">
-                        <h5 id="feedback-details-title" style="padding: 20px 0;"><strong>Feedback Details</strong></h5>
+                        <h5 id="feedback-details-title"><strong>{% trans "Feedback Details" %}</strong></h5>
 
                         {% if grade_details.additional_feedback %}
-                            <article style="padding: 0;">
-                                <h6 style="font-size: 16px; padding: 10px 0;" id="reviewer-note-title"><strong>Reviewer Note</strong></h6>
+                            <article style="padding: 20px 0 0 0; margin-bottom: 40px;">
+                                <h6 id="reviewer-note-title"><strong>{% trans "Reviewer Note" %}</strong></h6>
 
-                                <ul id="reviewer-note" style="padding: 20px; margin: 0 0 20px 0; list-style-type: none; background: #f3f3f3;" class="question__answers" id="oa_grade_{{ xblock_id }}_feedback_content" aria-labelledby="oa_grade_{{ xblock_id }}_feedback">
+                                <ul id="reviewer-note" class="question__answers" id="oa_grade_{{ xblock_id }}_feedback_content" aria-labelledby="oa_grade_{{ xblock_id }}_feedback">
                                     {% for feedback in grade_details.additional_feedback %}
                                         <li style="margin: 0;" class="answer feedback">
                                             {% include "openassessmentblock/grade/oa_assessment_feedback.html" with title=feedback.title assessment=feedback %}
@@ -61,38 +62,37 @@
                             </article>
                         {% endif %}
 
-                        <ol style="border-left: 1px solid #e5e5e5; border-right: 1px solid #e5e5e5;" class="list submission__peer-evaluations__questions">
+                        <ol class="criteria-results list submission__peer-evaluations__questions">
                             {% for criterion in grade_details.criteria %}
                                 {% with criterion_num=forloop.counter %}
                                     <li class="question question--{{ criterion_num }} ui-slidable__container">
-                                        <div class="question__title ui-slidable__control">
-                                            <button class="ui-slidable" id="oa_grade_{{ xblock_id }}_criteria_{{ criterion_num }}" aria-expanded="true" aria-controls="oa_grade_{{ xblock_id }}_criteria_{{ criterion_num }}_content">
-                                                <span class="icon fa fa-caret-right" aria-hidden="true"></span>
-                                                <span class="question__title__copy">{{ criterion.label }}</span>
-                                            </button>
-                                            {% if criterion.total_value > 0 %}
+                                        <div class="criterion-result-header ui-slidable__control">
+                                            <div class="criterion-result-header-title">
+
+                                                {% if criterion.median_score == 0 %}
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 criterion-result-icon failed">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                                                    </svg>
+                                                {% else %}
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 criterion-result-icon passed">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                {% endif %}
+    
+                                                <strong>{{ criterion.label }}</strong>
+                                            </div>
                                            
-                                                <span class="question__score">
-                                                    <span class="label sr">{% trans "Overall Grade" %}</span>
-                                                    <span class="question__score__value">{{ criterion.median_score }}</span>
-                                                    <span class="label label--divider sr">out of</span>
-                                                    <span class="question__score__potential">
-                                                        {{ criterion.total_value }}
-                                                        {% for assessment in criterion.assessments %}
-                                                        {% include "openassessmentblock/grade/oa_assessment_title.html" with assessment=assessment %}
-                                                    {% endfor %}
-                                                    </span>
-                                                </span>
-                                            {% endif %}
+                                            <span class="criterion-header-angle">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                                </svg>
+                                            </span>
                                         </div>
 
-                                        <div  style="display: none; padding: 10px 0;" class="ui-slidable__content" aria-labelledby="oa_grade_{{ xblock_id }}_criteria_{{ criterion_num }}" id="oa_grade_{{ xblock_id }}_criteria_{{ criterion_num }}_content">
+                                        <div  style="display: none;" class="rubric-feedback-content ui-slidable__content" aria-labelledby="oa_grade_{{ xblock_id }}_criteria_{{ criterion_num }}" id="oa_grade_{{ xblock_id }}_criteria_{{ criterion_num }}_content">
                                             <ul class="question__answers has--hints">
                                                 {% for assessment in criterion.assessments %}
                                                     <li class="answer">
-                                                        {% comment %} {% if criterion.options %}
-                                                            {% include "openassessmentblock/grade/oa_assessment_title.html" with assessment=assessment %}
-                                                        {% endif %} {% endcomment %}
                                                         {% include "openassessmentblock/grade/oa_assessment_feedback.html" with title=assessment.feedback_title assessment=assessment %}
                                                     </li>
                                                 {% endfor %}
@@ -111,3 +111,96 @@
         </div>
     </li>
 {% endspaceless %}
+<style>
+    #feedback-details-title {
+        font-size: 28px;
+        color: #0b0b0b;
+        padding: 0px !important;
+        margin-bottom: 16px;
+    }
+
+    #reviewer-note-title {
+        font-size: 20px;
+        color: 0b0b0b;
+        margin: 0 0 8px 0;
+    }
+
+    #reviewer-note {
+        background-color: #f6f6f6;
+        list-style-type: none;
+        padding: 32px;
+        border-bottom-right-radius: 64px;
+        max-width: 1100px;
+    }
+
+    ol.criteria-results {
+        border: 1px solid #e5e5e5;
+        border-top: none;
+    }
+
+
+    svg.criterion-result-icon {
+        width: 25px;
+        margin-right: 16px;
+    }
+
+    svg.criterion-result-icon.passed {
+        color: rgb(52, 131, 93);
+    }
+
+    svg.criterion-result-icon.failed {
+        color: rgb(208, 50, 42);
+        transform: rotate(90deg);
+    }
+
+    .criterion-result-header {
+        display: flex;
+        width: 100%;
+        min-height: 65px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 16px 16px 24px !important;
+        cursor: pointer;
+        border-top: 1px solid #e5e5e5 !important;
+    }
+
+    ol.criteria-results li:first-child .criterion-result-header {
+        border-top: none;
+    }
+
+    .criterion-result-header:hover {
+        background-color: #f6f6f6;
+    }
+
+    .criterion-result-header-title {
+        display: flex; 
+        align-items: center;
+    }
+
+    .criterion-result-header-title strong {
+        color: #0B0B0B;
+        letter-spacing: 0.7px;
+    }
+
+
+
+    .criterion-header-angle svg {
+        color: rgb(11,11,11);
+        width: 22px;
+        margin-left: 16px;
+        transition: .3s;
+    }
+
+    ol.criteria-results li.is--showing .criterion-header-angle svg {
+        transform: rotate(-180deg);
+    }
+
+    .rubric-feedback-content {
+        padding: 0 !important;
+    }
+
+    .rubric-feedback-content > ul {
+
+        padding: 32px 32px 32px 60px !important;
+    }
+</style>

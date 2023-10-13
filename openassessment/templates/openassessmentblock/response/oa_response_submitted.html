@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block list_item %}
-<li style="border: none; padding: 0;" id="openassessment__response__{{ xblock_id }}"
+<li style="border: none; padding: 0" id="openassessment__response__{{ xblock_id }}"
     class="openassessment__steps__step step--response is--complete {% if allow_latex %}allow--latex{%endif%}"
     tabindex="-1">
 {% endblock %}
@@ -58,15 +58,23 @@
         </div> 
     </div> {% endcomment %}
 
-    <h5 style="padding: 10px 0 20px;"><strong>Submission Results</strong></h5>
-    <p id="submission-date" style="font-size: 14px; margin: 0 0 10px 0;">Submission date: {{student_submission.submitted_at}}</p>
-    <div class="step__message message message--complete">
-        <h5 id="submission-status-title" class="message__title">{% trans "In review" %}</h5>
-        <div class="message__content">Your submission is in review.</div>
-    </div> 
+    <h5 id="submission-results-title"><strong>{% trans "Submission Results" %}</strong></h5>
+
+    <p id="submission-date" >{% trans "Submission Date" %}: {{student_submission.submitted_at}}</p>
+
+    <div id="submission-state" class="submission-in-review">
+        <p>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+            </svg>
+        </p>
+        <p>{% trans "Submission In Review" %}</p>
+    </div>
+        
 
     <div id="submission-in-review">
         {% include "openassessmentblock/oa_uploaded_file.html" with file_upload_type=file_upload_type file_urls=file_urls header=translated_header class_prefix="submission__answer" including_template="response_submitted" xblock_id=xblock_id %}
     </div>
 </div>
 {% endblock %}
+
