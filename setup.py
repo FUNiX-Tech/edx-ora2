@@ -51,14 +51,14 @@ def get_version(*file_paths):
 VERSION = get_version("openassessment", "__init__.py")
 
 PROJECT_NAME = 'funixora2'
-VERSION = '0.0.2-beta'
+VERSION = '0.0.6'
 
 setup(
     name=PROJECT_NAME,
     version=VERSION,
     author='edX',
     author_email='oscm@edx.org',
-    url='http://github.com/openedx/edx-ora2',
+    url='http://github.com/uuuuv/edx-ora2',
     description='edx-ora2',
     license='AGPL',
     long_description=README,

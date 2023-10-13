@@ -34,7 +34,7 @@ binaryornot==0.4.4
     # via
     #   -r requirements/test.txt
     #   cookiecutter
-bleach==6.0.0
+bleach
     # via -r requirements/test.txt
 bok-choy==2.0.2
     # via -r requirements/test-acceptance.in

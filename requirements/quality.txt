@@ -38,7 +38,7 @@ binaryornot==0.4.4
     # via
     #   -r requirements/test.txt
     #   cookiecutter
-bleach==6.0.0
+bleach
     # via -r requirements/test.txt
 boto==2.49.0
     # via

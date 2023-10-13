@@ -4,7 +4,7 @@ Base settings for ORA2.
 
 import os
 
-DEBUG = True
+DEBUG = False
 
 ADMINS = (
     ('admin', 'admin'),

@@ -2,7 +2,7 @@
 
 ## pypi
 
-1. replace `ora2` with `funixora2 0.0.2b0` in the `requirements.txt` file of the `edx-platform`
+1. replace `ora2` with `funixora2` in the requirement files of the `edx-platform`
 2. If encoutering the error `TypeError: unsupported operand type(s) for +: 'frozenset' and 'list'`, refer to the end section of this file.
 
 ## dev
@@ -20,9 +20,7 @@ cd edx-ora2
 git checkout uuuuv.interface
 ```
 
-2. Replace the `test.txt` here to `requirements/test.txt`
-
-3. Replace pipy ora with the ora we just cloned
+2. Replace pypi ora with the ora we just cloned
 
 You can do either:
 
@@ -40,7 +38,7 @@ pip uninstall ora2 -y
 pip install -e /edx/src/edx-ora2/
 ```
 
-4. Install dependencies
+3. Install dependencies
 
 This must be done from inside the lms or studio container
 
@@ -52,7 +50,7 @@ source edx-ora2/bin/activate
 make install
 ```
 
-5. Restart lms, studio, see the result
+4. Restart lms, studio, see the result
 
 ```shell
 make lms-restart lms-logs
