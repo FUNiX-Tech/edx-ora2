@@ -16,9 +16,6 @@ class WorkflowMixin:
     # Dictionary mapping assessment names (e.g. peer-assessment)
     # to the corresponding workflow step names.
     ASSESSMENT_STEP_NAMES = {
-        "self-assessment": "self",
-        "peer-assessment": "peer",
-        "student-training": "training",
         "staff-assessment": "staff"
     }
 
@@ -64,21 +61,7 @@ class WorkflowMixin:
 
         """
         requirements = {}
-
-        peer_assessment_module = self.get_assessment_module('peer-assessment')
-        if peer_assessment_module:
-            requirements["peer"] = {
-                "must_grade": peer_assessment_module["must_grade"],
-                "must_be_graded_by": peer_assessment_module["must_be_graded_by"],
-                "enable_flexible_grading": peer_assessment_module.get("enable_flexible_grading", False)
-            }
-
-        training_module = self.get_assessment_module('student-training')
-        if training_module:
-            requirements["training"] = {
-                "num_required": len(training_module["examples"])
-            }
-
+ 
         staff_assessment_module = self.get_assessment_module('staff-assessment')
         if staff_assessment_module:
             requirements["staff"] = {
@@ -97,10 +80,6 @@ class WorkflowMixin:
         }
         """
         course_settings = {}
-        peer_assessment_module = self.get_assessment_module('peer-assessment')
-        if peer_assessment_module and self.course is not None:
-            course_settings['force_on_flexible_peer_openassessments'] = \
-                self.course.force_on_flexible_peer_openassessments
 
         return course_settings
 
@@ -143,12 +122,6 @@ class WorkflowMixin:
         Raises:
             AssessmentWorkflowError
         """
-        if self.is_team_assignment():
-            if submission_uuid:
-                team_submission_uuid = self.get_team_submission_uuid_from_individual_submission_uuid(submission_uuid)
-            else:
-                team_submission_uuid = None
-            return self.get_team_workflow_info(team_submission_uuid)
 
         if submission_uuid is None:
             submission_uuid = self.get_submission_uuid()
@@ -176,15 +149,6 @@ class WorkflowMixin:
         """
         if self.submission_uuid is not None:
             return self.submission_uuid
-        elif self.is_team_assignment():
-            try:
-                # Query for submissions by the student item
-                student_item = self.get_student_item_dict()
-                submission_list = get_submissions(student_item)
-                if submission_list and submission_list[0]["uuid"] is not None:
-                    return submission_list[0]["uuid"]
-            except (SubmissionInternalError, SubmissionNotFoundError):
-                return None
         return None
 
     def get_workflow_status_counts(self):

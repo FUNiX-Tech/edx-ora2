@@ -462,3 +462,46 @@ def bulk_retrieve_workflow_status(course_id, item_id, submission_uuids=None):
     return StaffWorkflow.bulk_retrieve_workflow_status(
         course_id, item_id, submission_uuids
     )
+
+# uuuuv
+def get_staff_assessments():
+    """
+    Retrieve the latest staff assessment for a submission.
+
+    Args:
+        submission_uuid (str): The UUID of the submission being assessed.
+
+    Returns:
+        dict: The serialized assessment model
+        or None if no assessments are available
+
+    Raises:
+        StaffAssessmentInternalError if there are problems connecting to the database.
+
+    Example usage:
+
+    >>> get_latest_staff_assessment('10df7db776686822e501b05f452dc1e4b9141fe5')
+    {
+        'points_earned': 6,
+        'points_possible': 12,
+        'scored_at': datetime.datetime(2014, 1, 29, 17, 14, 52, 649284 tzinfo=<UTC>),
+        'scorer': u"staff",
+        'feedback': u''
+    }
+
+    """
+    try:
+        assessments = Assessment.objects.filter(score_type=STAFF_TYPE)
+    except DatabaseError as ex:
+        msg = "get alll staff assessments failed"
+        logger.exception(msg)
+        raise StaffAssessmentInternalError(msg) from ex
+
+    if assessments:
+        result = []
+        for asm in assessments: 
+            result.append(full_assessment_dict(asm))
+        return result
+
+    return None
+

@@ -103,6 +103,11 @@ class AssessmentWorkflow(TimeStampedModel, StatusModel):
     course_id = models.CharField(max_length=255, blank=False, db_index=True)
     item_id = models.CharField(max_length=255, blank=False, db_index=True)
 
+    # uuuuv
+    student_id = models.CharField(max_length=255, blank=False, default="uuuuv")
+    # uuuuv end
+
+
     class Meta:
         ordering = ["-created"]
         # TODO: In migration, need a non-unique index on (course_id, item_id, status)
@@ -159,7 +164,11 @@ class AssessmentWorkflow(TimeStampedModel, StatusModel):
             submission_uuid=submission_uuid,
             status=AssessmentWorkflow.STATUS.waiting,
             course_id=submission_dict['student_item']['course_id'],
-            item_id=submission_dict['student_item']['item_id']
+            item_id=submission_dict['student_item']['item_id'],
+            # uuuuv
+            student_id=submission_dict['student_item']['student_id'],
+            # uuuuv end
+
         )
         workflow_steps = [
             AssessmentWorkflowStep.objects.create(

@@ -4,14 +4,11 @@
 {% load i18n %}
 {% spaceless %}
     <li id="openassessment__grade__{{ xblock_id }}" class="openassessment__steps__step step--grade is--complete is--showing has--grade {% if allow_latex %}allow--latex{% endif %}" tabindex="-1">
-
         
         <div class="ui-slidable__content" id="oa_grade_{{ xblock_id }}_content" aria-labelledby="oa_grade_{{ xblock_id }}">
             <div class="wrapper--step__content">
                 <div class="step__content">
                     <article style="margin: 0 0 80px 0;" class="submission__answer__display step__content__section">
-                        
-
 
                         <h5 id="submission-results-title"><strong>{% trans "Submission Results" %}</strong></h5>
 
@@ -105,12 +102,21 @@
                         </ol>
                     </article>
 
-                 
+
+
                 </div>
             </div>
         </div>
     </li>
+
+    <select style="height: 45px; border-radius: 4px;">
+        {% for wf in workflows %}
+            <option>{{ wf.created }}</option>
+            {% comment %} <option>{{wf.item_id}} {{wf.student_id}} {{wf.submission_uuid}} {{wf.course_id}}</option> {% endcomment %}
+        {% endfor %}
+    </select>
 {% endspaceless %}
+
 <style>
     #feedback-details-title {
         font-size: 28px;
@@ -181,8 +187,6 @@
         color: #0B0B0B;
         letter-spacing: 0.7px;
     }
-
-
 
     .criterion-header-angle svg {
         color: rgb(11,11,11);

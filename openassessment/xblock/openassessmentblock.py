@@ -552,6 +552,8 @@ class OpenAssessmentBlock(
 
         ui_models = self._create_ui_models()
         # All data we intend to pass to the front end.
+
+
         context_dict = {
             "title": self.title,
             "estimated_time": self.estimated_time,

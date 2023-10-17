@@ -14,6 +14,8 @@ from openassessment.assessment.errors import PeerAssessmentError, SelfAssessment
 
 from .utils.data_conversion import create_submission_dict
 
+from openassessment.workflow.models import AssessmentWorkflow
+
 
 class GradeMixin:
     """Grade Mixin introduces all handlers for displaying grades
@@ -105,30 +107,12 @@ class GradeMixin:
         peer_assessments = []
         has_submitted_feedback = False
 
-        if "peer-assessment" in assessment_steps:
-            peer_api.get_score(
-                submission_uuid,
-                self.workflow_requirements()["peer"],
-                self.get_course_workflow_settings()
-            )
-            feedback = peer_api.get_assessment_feedback(submission_uuid)
-            peer_assessments = [
-                self._assessment_grade_context(peer_assessment)
-                for peer_assessment in peer_api.get_assessments(submission_uuid)
-            ]
-            has_submitted_feedback = feedback is not None
-
-        if "self-assessment" in assessment_steps:
-            self_assessment = self._assessment_grade_context(
-                self_api.get_assessment(submission_uuid)
-            )
-
         raw_staff_assessment = staff_api.get_latest_staff_assessment(submission_uuid)
         if raw_staff_assessment:
             staff_assessment = self._assessment_grade_context(raw_staff_assessment)
 
         feedback_text = feedback.get('feedback', '') if feedback else ''
-        student_submission = sub_api.get_submission(submission_uuid)
+        student_submission = sub_api.get_submission(submission_uuid) # không lấy được submission cũ vì đã bị xóa. 
 
         # We retrieve the score from the workflow, which in turn retrieves
         # the score for our current submission UUID.
@@ -137,8 +121,43 @@ class GradeMixin:
         # It's possible for the score to be `None` even if the workflow status is "done"
         # when all the criteria in the rubric are feedback-only (no options).
         score = workflow['score']
+        assessment_history = staff_api.get_staff_assessments()
+
+        # uuuuv
+        current_asm_workflow='lll'
+        # current_asm_workflow = AssessmentWorkflow.objects.get(uuid=workflow['uuid'])
+
+        # for sub in submission_uuid_list:
+        #     x = None
+        #     try:
+        #         x = sub_api.get_submission(sub)
+        #     except:    
+        #         pass
+        #     # y =  create_submission_dict(x, self.prompts)
+        #     if x is not None: 
+        #         uuuuv_submission_list.append(x)
+
+        # workflows = AssessmentWorkflow.objects.filter(student_id=workflow['student_id'])
+        submission_uuid = workflow['submission_uuid']
+        from submissions import api as submission_api
+        uuuuv_submission = "failed to get submission"
+        try:
+            uuuuv_submission = submission_api.get_submission_and_student(submission_uuid)
+        except:
+            pass
+        
+        workflows = 'Failed to get workflows'
+        if uuuuv_submission != "failed to get submission":
+            student_id = uuuuv_submission['student_item']['student_id']
+            item_id = uuuuv_submission['student_item']['item_id']
+            workflows = AssessmentWorkflow.objects.filter(student_id=student_id, item_id=item_id)
+        # uuuuv end
 
         context = {
+            "workflow": workflow,
+            "workflows": workflows,
+            "uuuuv_submission": uuuuv_submission,
+            "current_asm_workflow": current_asm_workflow,
             'score': score,
             'score_explanation': self._get_score_explanation(workflow),
             'feedback_text': feedback_text,
@@ -156,7 +175,7 @@ class GradeMixin:
             'allow_latex': self.allow_latex,
             'prompts_type': self.prompts_type,
             'file_urls': self.get_download_urls_from_submission(student_submission),
-            'xblock_id': self.get_xblock_id()
+            'xblock_id': self.get_xblock_id() ######################################### got xblock_id
         }
 
         return ('openassessmentblock/grade/oa_grade_complete.html', context)
