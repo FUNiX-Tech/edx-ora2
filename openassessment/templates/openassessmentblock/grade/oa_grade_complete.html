@@ -110,6 +110,15 @@
             </div>
         </div>
     </li>
+
+    <div id="submission-history" style="margin: 80px 0 80px 0;">
+        <h2 style="color: #0b0b0b;margin: 0 0 16px 0; font-size: 28px;">Submission History</h2>
+        <p style="color: #696969; font-size: 16px; margin: 0 12px 8px 0;">Choose a different project submission</p>
+
+        <div id="vanselect">
+        </div>
+    </div>
+
 {% endspaceless %}
 <style>
     #feedback-details-title {
@@ -204,3 +213,251 @@
         padding: 32px 32px 32px 60px !important;
     }
 </style>
+
+
+<style>
+    #vanselect {
+      max-width: 600px;
+      position: relative;
+    }
+
+    #vanselect-select {
+      height: 52px;
+      border: 1px solid #000;
+      border-radius: 4px;
+      display: flex;
+      padding: 1px;
+      box-shadow: 0px 1px 2px 0px #0B0B0B0F, 0px 1px 3px 0px #0B0B0B1A;
+    }
+
+    #vanselect-select.is--focus {
+      border: 4px solid blue;
+    }
+
+    #vanselect-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      padding: 12px;
+    }
+
+    #vanselect-svg-container {
+      width: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #vanselect-svg-container svg {
+      width: 20px;
+      transform: rotate(0);
+      transition: 0.2s;
+    }
+
+    #vanselect-select.is--focus #vanselect-svg-container svg {
+      transform: rotate(-180deg);
+    }
+
+    #vanselect-options {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      list-style-type: none;
+      border: 1px solid #000; 
+      border-radius: 4px;
+      box-shadow: 0px 1px 2px 0px #0B0B0B0F, 0px 1px 3px 0px #0B0B0B1A;
+       background-color: #fff;
+        z-index: 100;
+        margin: 0;
+        padding: 5px;
+    }
+
+    .vanselect-option {
+        height: 40px;
+        padding: 0 12px !important;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        margin: 0 !important;;
+    }
+
+    .vanselect-option:hover {
+        background: #e5e5e5;
+    }
+  </style>
+<script>
+    class VanSelect {
+        constructor(obj) {
+          const {
+            MAIN_ID,
+            SVG,
+            PLACEHOLDER,
+            NO_OPTION_FOUND,
+            chosenValue,
+            OPTIONS,
+            OPTION_HANDLER,
+          } = obj || {};
+      
+          this.MAIN_ID = MAIN_ID || "vanselect";
+          this.PLACEHOLDER = PLACEHOLDER || "placehoder";
+          this.NO_OPTION_FOUND = NO_OPTION_FOUND || "No Option Found";
+          this.SVG =
+            SVG ||
+            `<svg viewBox="0 0 24 24" focusable="false" class="chakra-icon css-onkibi"><path fill="currentColor" d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path></svg>`;
+      
+          this.INPUT_ID = `${this.MAIN_ID}-input`;
+          this.SELECT_ID = `${this.MAIN_ID}-select`;
+          this.SVG_CONTAINER_ID = `${this.MAIN_ID}-svg-container`;
+          this.OPTIONS_ID = "vanselect-options";
+          this.OPTION_CLASS = "vanselect-option";
+          this.chosenValue = chosenValue || "";
+          this.OPTIONS = OPTIONS || [];
+          this.OPTION_HANDLER =
+            OPTION_HANDLER ||
+            function () {
+              console.log("trigger option handler");
+            };
+        }
+      
+        init() {
+          this.renderSkeleton();
+        }
+      
+        // render methods
+        renderSkeleton() {
+          const container = this.getEleById(this.MAIN_ID);
+          const select = this.renderSelect();
+          container.appendChild(select);
+        }
+      
+        renderSelect() {
+          const select = this.createEle("div");
+          select.id = this.SELECT_ID;
+          select.onclick = (e) => this.onClickSelectHandler(e.currentTarget);
+      
+          const input = this.renderInput();
+      
+          const svgContainer = this.createEle("span");
+          svgContainer.id = this.SVG_CONTAINER_ID;
+          svgContainer.innerHTML = this.SVG;
+      
+          select.appendChild(input);
+          select.appendChild(svgContainer);
+      
+          return select;
+        }
+      
+        renderInput() {
+          const input = this.createEle("input");
+          input.id = this.INPUT_ID;
+          input.placeholder = this.PLACEHOLDER;
+      
+          input.oninput = (e) => this.onInputChangeHandler(e.target.value.trim());
+      
+          return input;
+        }
+      
+        renderOptions(options) {
+          const optionsContainer = this.createEle("ul");
+          optionsContainer.id = this.OPTIONS_ID;
+          options.forEach((option) => {
+            const optionEle = this.createOptionEle(option);
+            optionsContainer.appendChild(optionEle);
+          });
+      
+          this.getEleById(this.MAIN_ID).appendChild(optionsContainer);
+        }
+      
+        createOptionEle(val) {
+          const li = this.createEle("li");
+          li.innerText = val;
+          li.classList.add(this.OPTION_CLASS);
+          li.onclick = () => {
+            this.chosenValue = val;
+            this.removeOptions();
+            this.OPTION_HANDLER();
+          };
+      
+          return li;
+        }
+      
+        removeOptions() {
+          const optionsEle = this.getEleById(this.OPTIONS_ID);
+          if (optionsEle) {
+            optionsEle.remove();
+          }
+        }
+      
+        // helpers
+        createEle(ele) {
+          return document.createElement(ele);
+        }
+      
+        getEleById(id) {
+          return document.getElementById(id);
+        }
+      
+        // event handler
+        _clickOutsideHandler() {
+          this.getEleById(this.INPUT_ID).value = this.chosenValue;
+          this.getEleById(this.SELECT_ID).classList.remove("is--focus");
+          this.removeOptions();
+        }
+      
+        onInputChangeHandler(val) {
+          const optionsContainer = this.getEleById(this.OPTIONS_ID);
+      
+          if (!optionsContainer) return;
+      
+          let filterOptions = this.OPTIONS.filter((item) => item.includes(val));
+          if (!filterOptions.length) filterOptions = [this.NO_OPTION_FOUND];
+          this.removeOptions();
+          this.renderOptions(filterOptions);
+        }
+      
+        onClickSelectHandler(select) {
+          select.classList.toggle("is--focus");
+          const optionsEle = this.getEleById(this.OPTIONS_ID);
+          if (optionsEle) {
+            this.getEleById(this.INPUT_ID).blur();
+            this.removeOptions();
+          } else {
+            this.getEleById(this.INPUT_ID).focus();
+            this.renderOptions(this.OPTIONS);
+      
+            document.addEventListener(
+              "click",
+              this.clickOutsideSelectContainerHandler
+            );
+      
+            window.addEventListener("blur", this.onBlurIframeHandler);
+          }
+        }
+      
+        onBlurIframeHandler = () => {
+          this._clickOutsideHandler();
+        };
+      
+        clickOutsideSelectContainerHandler = (e) => {
+          const container = this.getEleById(this.MAIN_ID);
+          if (!container.contains(e.target)) {
+            this._clickOutsideHandler();
+          }
+        };
+      
+        clearEventListeners() {
+          document.removeEventListener(
+            "click",
+            this.clickOutsideSelectContainerHandler
+          );
+      
+          window.removeEventListener("blur", this.onBlurIframeHandler);
+        }
+    }
+      
+    const vanselect = new VanSelect({
+        OPTIONS: ["August 25, 2023", "August 23, 2023", "August 20, 2023"],
+      });
+      vanselect.init();
+</script>
