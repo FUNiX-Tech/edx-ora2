@@ -3,181 +3,19 @@
 {% spaceless %}
 
   {% block list_item %}
-    <li style="padding: 0; border: none; box-shadow: none;"   class="openassessment__steps__step step--response is--in-progress is--showing" tabindex="-1">
+    <li style="padding: 0; border: none; box-shadow: none;" class="openassessment__steps__step step--response is--in-progress is--showing" tabindex="-1">
   {% endblock %}
-
-    {% comment %} <header class="step__header ui-slidable__control" >
-        <span>
-            {% block button %}
-                <button class="ui-slidable" aria-expanded="true" id="oa_response_{{ xblock_id }}" aria-controls="oa_response_{{ xblock_id }}_content" aria-labeledby="oa_step_title_response">
-                    <span class="icon fa fa-caret-right" aria-hidden="false"/>
-                </button>
-            {% endblock %}
-        </span>
-
-        <span>
-            <h4 class="step__title">
-                <span class="step__counter"></span>
-                <span class="wrapper--copy">
-                    <span
-                      id="oa_step_title_response"
-                      class="step__label"
-                      aria-describedby="oa_step_status_response oa_step_deadline_response">
-                      {% if team_name %}
-                        {% trans "Your Team's Response" %}
-                      {% else %}
-                        {% trans "Your Response" %}
-                      {% endif %}
-                    </span>
-                </span>
-            </h4>
-        </span>
-
-        {% if submission_start %}
-        <span class="step__deadline">
-            {# Translators: This string displays a date to the user, then tells them the time until that date.  Example: "available August 13th, 2014 (in 5 days and 45 minutes)" #}
-            {% blocktrans with start_date=submission_start|timezone:"UTC"|date:"c" time_until=submission_start|timeuntil %}
-            <span id="oa_step_deadline_response" class="date ora-datetime" data-datetime="{{ start_date }}" data-string="available {date} (in {{ time_until }})" data-timezone="{{ user_timezone }}" data-language="{{ user_language }}"></span>
-            {% endblocktrans %}
-        </span>
-        {% elif submission_due %}
-        <span class="step__deadline">
-            {# Translators: This string displays a date to the user, then tells them the time until that date.  Example: "due August 13th, 2014 (in 5 days and 45 minutes)" #}
-            {% blocktrans with due_date=submission_due|timezone:"UTC"|date:"c" time_until=submission_due|timeuntil %}
-            <span id="oa_step_deadline_response" class="date ora-datetime" data-datetime="{{ due_date }}" data-string="due {date} (in {{ time_until }})" data-timezone="{{ user_timezone }}" data-language="{{ user_language }}"></span>
-            {% endblocktrans %}
-        </span>
-        {% endif %}
-        {%  block title %}
-        <span class="step__status">
-            <span id="oa_step_status_response" class="step__status__value">
-                <span class="copy">{% trans "In Progress" %}</span>
-            </span>
-        </span>
-        {% endblock %}
-    </header> {% endcomment %}
-
-    {% comment %} 
-    <header class="step__header" style="margin-bottom: 60px !important;">
-      {% if submission_start %}
-      <span class="step__deadline">
-          {# Translators: This string displays a date to the user, then tells them the time until that date.  Example: "available August 13th, 2014 (in 5 days and 45 minutes)" #}
-          {% blocktrans with start_date=submission_start|timezone:"UTC"|date:"c" time_until=submission_start|timeuntil %}
-          <span id="oa_step_deadline_response" class="date ora-datetime" data-datetime="{{ start_date }}" data-string="available {date} (in {{ time_until }})" data-timezone="{{ user_timezone }}" data-language="{{ user_language }}"></span>
-          {% endblocktrans %}
-      </span>
-      {% elif submission_due %}
-      <span style="font-size: 13px; display: inline-block; margin: -5px 0  0; border: 1px solid #222222; border-radius: 999px; padding: 5px 10px; background: #eef0f5;" class="step__deadline">
-          {# Translators: This string displays a date to the user, then tells them the time until that date.  Example: "due August 13th, 2014 (in 5 days and 45 minutes)" #}
-          {% blocktrans with due_date=submission_due|timezone:"UTC"|date:"c" time_until=submission_due|timeuntil %}
-          <span id="oa_step_deadline_response" class="date ora-datetime" data-datetime="{{ due_date }}" data-string="due {date} (in {{ time_until }})" data-timezone="{{ user_timezone }}" data-language="{{ user_language }}"></span>
-          {% endblocktrans %}
-      </span>
-      {% endif %} {% endcomment %}
-
-      
-      {% comment %} {%  block title %}
-      <span class="step__status">
-          <span id="oa_step_status_response" class="step__status__value">
-              <span class="copy">{% trans "In Progress" %}</span>
-          </span>
-      </span>
-      {% endblock %} 
-  </header>
-  {% endcomment %}
-
     {% block body %}
     <div class="ui-slidable__content" aria-labelledby="oa_response_{{ xblock_id }}" id="oa_response_{{ xblock_id }}_content">
         <div class="wrapper--step__content">
           
-          {% comment %}
-          <div class="step__instruction">
-                <p>
-                  {% if team_name %}
-                    {% trans "Enter your team's response to the prompt." %}
-                    {% if submission_due %}
-                      {% blocktrans %}
-                        Your work will save automatically and you can return to complete your team's response at any time before the due date
-                      {% endblocktrans %}
-                      (<span class="step__deadline">
-                        <span id="oa_step_deadline_response"
-                          class="date ora-datetime"
-                          data-datetime="{{ submission_due|timezone:'UTC'|date:'c' }}"
-                          data-timezone="{{ user_timezone }}"
-                          data-format="longDateTime"
-                          data-language="{{ user_language }}">
-                        </span>
-                      </span>).
-                    {% else %}
-                      {% blocktrans %}
-                        Your work will save automatically and you can return to complete your team's response at any time.
-                      {% endblocktrans %}
-                    {% endif %}
-                    <strong class="emphasis">
-                      {% trans "After you submit a response on behalf of your team, it cannot be edited." %}
-                    </strong>
-                  {% else %}
-                    {% trans "Enter your response to the prompt." %}
-                    {% if submission_due %}
-                      {% if date_config_type == 'subsection' %}
-                        {% trans "Your work will save automatically and you can return to complete your response at any time before the subsection due date " %}
-                      {% elif date_config_type == 'course_end' %}
-                        {% trans "Your work will save automatically and you can return to complete your response at any time before the course ends " %}
-                      {% else %}
-                        {% trans "Your work will save automatically and you can return to complete your response at any time before the due date " %}
-                      {% endif %}
-                      (<span class="step__deadline">
-                          <span id="oa_step_deadline_response"
-                            class="date ora-datetime"
-                            data-datetime="{{ submission_due|timezone:'UTC'|date:'c' }}"
-                            data-timezone="{{ user_timezone }}"
-                            data-format="longDateTime"
-                            data-language="{{ user_language }}">
-                          </span>
-                      </span>).
-                    {% else %}
-                      {% trans "Your work will save automatically and you can return to complete your response at any time." %}
-                    {% endif %}
-                    <strong class="emphasis">{% trans "After you submit your response, you cannot edit it" %}</strong>.
-                  {% endif %}
-                </p>
-            </div>
-          {% endcomment %}
-
-            {% if show_rubric_during_response %}
-                <div class="step__rubric">
-                    <div class="rubric_display_container ui-slidable__container is--initially--collapsed" id="read_only_rubric_container">
-                        <div class="ui-slidable__control question__title" id="read_only_rubric_header_control">
-                            <button class="ui-slidable" aria-expanded="true" id="oa_rubric__read_only__control" aria-controls="oa_rubric__read_only__content">
-                                <span class="icon fa fa-caret-right" id="read-only-rubric-button" aria-hidden="true"></span>
-                                <span id="read_only___assessment__rubric__header" class="ui-slidable__control__copy question__title__copy">{% trans "What will this assignment be graded on?" %}</span>
-                            </button>
-                        </div>
-                        <div class="ui-slidable__content" aria-labelledby="oa_rubric__read_only__control" id="oa_rubric__read_only__content">
-                            {% include "openassessmentblock/oa_rubric.html" with rubric_type="read_only" %}
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-
+        
             <div class="step__content" data-base-asset-url="{{ base_asset_url }}">
                 <form id="upload-file-form" style="background: transparent;" class="response__submission" >
                     <ol class="list list--fields response__submission__content">
                         {% for part in saved_response.answer.parts %}
                             <li class="submission__answer__part">
-                                {% comment %}
-                                <h5 class="submission__answer__part__text__title">{% trans "The prompt for this section" %}</h5>
-                                <article class="submission__answer__part__prompt">
-                                  <div class="submission__answer__part__prompt__copy">
-                                    {% if prompts_type == 'html' %}
-                                    {{ part.prompt.description|safe }}
-                                    {% else %}
-                                    {{ part.prompt.description|linebreaks }}
-                                    {% endif %}
-                                  </div>
-                                </article>
-                                {% endcomment %}
-
+                             
                                 {% if text_response %}
                                 <div class="field field--textarea submission__answer__part__text">
                                     <div class="submission__answer__part__text">
@@ -197,15 +35,6 @@
                                             {% trans "(Optional)" %}
                                           {% endif %}
                                         </h5>
-                                        {% if team_name %}
-                                          {% blocktrans %}
-                                              Teams should designate one team member to submit a response on behalf of the
-                                              entire team.  All team members can use this space to work on draft responses,
-                                              but you will not be able to see your teammates' drafts made in this space, so
-                                              please coordinate with them to decide on the final response the designated team
-                                              member should submit.
-                                          {% endblocktrans %}
-                                        {% endif %}
                                     </div>
                                     <span style="font-size: 16px;">{% trans "Are there any areas you would like your reviewer to pay particular attention to?" %}</span>
 
@@ -214,7 +43,6 @@
                                         class="submission__answer__part__text__value"
                                         data-preview="submission__{{ forloop.counter }}"
                                         aria-labelledby="submission__answer__part__text__title__{{ forloop.counter }}__{{ xblock_id }}"
-                                        {% comment %} placeholder="{% trans "Enter your response to the prompt above." %}" {% endcomment %}
                                         maxlength="100000"
                                     >{{ part.text }}</textarea>
                                 </div>
@@ -234,16 +62,6 @@
                                       <h5 class="message__title">{% trans "We could not save your progress" %}</h5>
                                       <div class="message__content"></div>
                                   </div>
-
-                                  {% comment %} <ul class="list list--actions">
-                                      <li class="list--actions__item">
-                                          <div id="response__save_status__{{ xblock_id }}" class="response__submission__label">
-                                              <span class="save__submission__icon icon fa fa-circle-o" aria-hidden="true"></span>
-                                              <span class="sr">{% trans "Status of Your Response" %}:</span>
-                                              <span class="save__submission__label">{{ save_status }}</span>
-                                          </div>
-                                      </li>
-                                  </ul> {% endcomment %}
                               </div>
                           </li>
                           {% endif %}
@@ -252,12 +70,6 @@
                           
                           {% if file_upload_type %}
                             <li class="field">
-                               {% comment %} <div class="upload__error">
-                                    <div class="message message--inline message--error message--error-server" tabindex="-1">
-                                        <h5 class="message__title">{% trans "We could not upload files" %}</h5>
-                                        <div class="message__content"></div>
-                                    </div>
-                                </div> {% endcomment %}
                                 <div class="delete__error">
                                     <div class="message message--inline message--error message--error-server" tabindex="-1">
                                         <h5 class="message__title">{% trans "We could not delete files" %}</h5>
@@ -295,8 +107,6 @@
                                   </button>
                                 </div>
                             </li>
-
-
                           {% endif %}
 
                           <li class="field">
@@ -326,24 +136,6 @@
               </div>
 
 
-              {% comment %} {% if team_name %}
-                <div id='team_concurrency_notice'>
-                  {% trans "This is a team submission." %}
-                  {% if file_upload_type and text_response %}
-                      {% trans "One team member should submit a response with the team’s shared files and a text response on behalf of the entire team." %}
-                  {% elif file_upload_type %}
-                      {% trans "One team member should submit a response with the team’s shared files on behalf of the entire team." %}
-                  {% elif text_response %}
-                      {% trans "One team member should submit a text response on behalf of the entire team." %}
-                  {% else %}
-                      {% trans "One team member should submit on behalf of the entire team."%}
-                  {% endif %}
-                  {% blocktrans %}
-                  Learn more about team assignments here: (<a target="_blank" href="https://support.edx.org/hc/en-us/articles/360000191067-Submit-your-response#h_01FVD8SXM9E5H2DNAG87X25ZHR">link</a>)
-                  {% endblocktrans %}
-                </div>
-              {% endif %} {% endcomment %}
-
               <div class="step__actions" >
                 <div class="message message--inline message--error message--error-server" tabindex="-1">
                     <h5 class="message__title">{% trans "We could not submit your response" %}</h5>
@@ -356,7 +148,6 @@
                                 text_response="{{text_response}}"
                                 file_upload_response="{{file_upload_response}}"
                                 >
-                            {% comment %}{% trans "Submit your response and move to the next step" %}{% endcomment %}
                             {% trans "Submit" %}
                         </button>
                     </li>

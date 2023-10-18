@@ -10,8 +10,6 @@
             <div class="wrapper--step__content">
                 <div class="step__content">
                     <article style="margin: 0 0 80px 0;" class="submission__answer__display step__content__section">
-                        
-
 
                         <h5 id="submission-results-title"><strong>{% trans "Submission Results" %}</strong></h5>
 
@@ -110,6 +108,101 @@
             </div>
         </div>
     </li>
+
+{% if score %}
+    {% if score.points_earned == score.points_possible %}
+      <div id="resubmit" style="margin: 0 0 8px 0;">
+        <p id="resubmit-button" onclick="showResubmitModal()">
+          <strong>Resubmit Assignment</strong>
+        </p >
+      </div>
+
+      <div id="resubmit-modal" style="display: block; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: #fff; z-index: 200;padding: 80px 20px 0px 20px;">
+        <p onclick="closeResubmitModal()" style="margin: 0 0 30px 0; display: flex; align-items: center; gap: 10px; color: rgb(32, 21, 255);">
+          <svg style="width: 20px;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+          </svg>
+          <strong style="font-size: 16px;"><u>Go Back</u></strong>
+        </p>
+
+        <h2 style="height: 48px; font-size: 32px; color: #0b0b0b; margin: 0 0 48px 0;"><strong>Resubmit Assignment</strong></h2>
+
+        <ol style="margin: 0 0 16px 16px; padding: 0 0 0 16px; font-size: 16px; color: #0b0b0b;">
+          <li style="margin: 8px 0 0 0;">Complete both slide deck templates and check your work against the Rubric.</li>
+          <li style="margin: 8px 0 0 0;">Include both template files in a ZIP file called PYUR_Final_Project.zip</li>
+          <li style="margin: 8px 0 0 0;">Upload this ZIP file in your submission.</li>
+        </ol>
+        <br>
+        <br>
+        <p style="font-size: 16px; color: #0b0b0b; margin: 48px 0 40px 0;">Learn the best practices for revising and resubmitting your project. <a style="color: rgb(32, 21, 255); font-weight: 700;" href="#"><u>View Video</u></a></p>
+        <hr>
+
+        <div id="upload-file">
+          <p style="font-size: 16px; color: #0b0b0b;" for="file-upload-input"><strong>Upload Zip File</strong></p>
+          <p style="color: #696969; font-size: 16px; margin: 8px 0 16px;">Compress your project file(s) into a single zip file on your computer. 500 MB limit (uncompressed).</p>
+
+          <div style="display: none; max-width: 500px; background-color: #f6f6f6; padding: 32px; border-bottom-right-radius: 64px; margin: 0 0 40px 0;" id="file-upload-preview">
+
+            <p style="display: flex; align-items: center; gap: 10px;">
+              <svg style="width: 20px; color: green;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+
+              <span id="preview-filename"></span>              
+
+            </p>
+
+            <button onclick="removeChosenFile()" style="color: rgb(32, 21, 255); background-color: none; background-image: none; border: none; outline: none; padding: 0; margin: 0;"><u><strong>Delete</strong></u></button>
+
+          </div>
+
+          <p onclick="clickFileUploadInput()" style="display: flex; align-items: center; justify-content: center; color: #fff; width: 136px; height: 48px; background-color: rgb(32, 21, 255); border-radius: 4px; cursor: pointer;" id="fake-file-upload-input" ><strong>Choose File</strong></p>
+
+          <input id="file-upload-input" onchange="changeFileHandler(event)" type="file" style="display: block; width: 0; height: 0; overflow: hidden;" />
+        </div>
+
+        <div id="submission-details" style="margin: 0 0 40px 0;">
+          <label style="font-size: 16px; color: #0b0b0b;"><strong>Submission Details (optional)</strong></label>
+          <p style="color: #696969; font-size: 16px; margin: 8px 0  16px;">Are there any areas you would like your reviewer to pay particular attention to?</p>
+
+          <textarea id="submission-details-textarea" style="min-height: 150px; max-width: 750px; width: 100%; border-radius: 4px; font-weight: 400;"></textarea>
+        </div>
+
+        <div id="confirm-policy" style="margin: 0 0 40px 0;">
+          <label style="font-size: 16px; color: #0b0b0b;"><strong>Funix Honor Code</strong></label>
+          <p style="color: #696969; font-size: 16px; margin: 8px 0  16px;">You must agree to the following before submitting your project.</p>
+
+          <div class="policy-item">
+            <input id="checkbox-policy-1" type="checkbox" />
+            <p>
+              I affirm that I have read Funix's definitoin of <a href="#">plagiarism</a>, and that this submission is my own work.
+            </p>
+          </div>
+
+          <div class="policy-item">
+            <input id="checkbox-policy-2" type="checkbox" />
+            <p>
+              I have correctly attributed all content obtained from other sources, such as websites, books, forums, blogs, GitHub repos, etc.
+            </p>
+          </div>
+
+          <div class="policy-item">
+            <input id="checkbox-policy-3" type="checkbox" />
+            <p>
+              I unserstand that Funix actively checks submissions for plagiarism and that failure to adhere to the <a href="#">Funix Honor Code</a> may result in the cancellation of my enrollment.
+            </p>
+          </div>
+
+        </div>
+
+        <button id="submit-button" class="disabled">
+          <strong>Submit</strong>
+        </button>
+
+      </div>
+    {% endif %}
+{% endif %}
+
 
     <div id="submission-history" style="margin: 80px 0 80px 0;">
         <h2 style="color: #0b0b0b;margin: 0 0 16px 0; font-size: 28px;">Submission History</h2>
@@ -214,6 +307,26 @@
     }
 </style>
 
+<style>
+  #resubmit-button {
+    height: 48px;
+    width: 200px;
+    background-color: rgb(32, 21, 255) !important;
+    border-radius: 4px;
+    border: 1px solid rgb(223, 223, 223);
+    color: #fff;
+    transition: .1s;
+    font-size: 16px;
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  #resubmit-button:hover {
+    background-color: rgb(23, 26, 83) !important;;
+  }
+</style>
 
 <style>
     #vanselect {
@@ -460,4 +573,100 @@
         OPTIONS: ["August 25, 2023", "August 23, 2023", "August 20, 2023"],
       });
       vanselect.init();
+</script>
+
+<style>
+  #submission-details-textarea:focus {
+    transition: .1s;
+    outline: none;
+  }
+
+  #submission-details-textarea:focus {
+    border-color: rgb(32, 21, 255);
+    box-shadow: rgb(31, 21, 255) 0 0 0 4px;
+    outline: none;
+  }
+
+  .policy-item {
+    display: flex; 
+    align-items: flex-start;
+  }
+
+  .policy-item input {
+    width: 20px; 
+    margin-top: 2px;
+    transform: scale(1.5);
+  }
+
+  .policy-item p {
+    margin: 0 0 0 16px;
+  }
+
+  #submit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    border: none;
+    box-shadow: none;
+     outline: none;
+     font-size: 16px;
+     width: 110px;
+     height: 48px;
+     color: white;
+     background-image: none;
+     background-color: rgb(32, 21, 255);
+     transition: .1s;
+  }
+
+  #submit-button:hover {
+    background-color: rgb(23, 26, 83);
+
+  }
+
+  #submit-button.disabled {
+    background-color: rgb(199, 199, 199); 
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  function showResubmitModal() {
+    document.getElementById('resubmit-modal').style.display = 'block';
+  }
+
+  function closeResubmitModal() {
+    document.getElementById('resubmit-modal').style.display = 'none';
+  }
+
+  function clickFileUploadInput() {
+    document.getElementById("file-upload-input").click();
+  }
+
+  function changeFileHandler(e) {
+    const file = e.target.files[0];
+
+    if (file) {
+      const fileName = file.name;
+      const fileType = file.type;
+      const fileSize = file.size;
+
+      document.getElementById("preview-filename").innerText = fileName;
+      document.getElementById("file-upload-preview").style.display = "block";
+      document.getElementById("fake-file-upload-input").style.display = "none";
+      document.getElementById("submit-button").classList.remove("disabled");
+    }
+
+    if (!file) {
+      document.getElementById("preview-filename").innerText = "";
+      document.getElementById("submit-button").classList.add("disabled");
+    }
+  }
+
+  function removeChosenFile() {
+    document.getElementById("file-upload-input").value = null;
+    document.getElementById("file-upload-preview").style.display = "none";
+    document.getElementById("fake-file-upload-input").style.display = "flex";
+    document.getElementById("submit-button").classList.add("disabled");
+  }
 </script>
