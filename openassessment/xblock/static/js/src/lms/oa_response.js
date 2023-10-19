@@ -91,9 +91,7 @@ export class ResponseView {
           view.baseView.announceStatusChangeToSRandFocus(stepID, usageID, false, view, focusID);
           view.announceStatus = false;
           view.dateFactory.apply();
-
-
-
+          view.resetStudentAttemps();
         });
       },
     ).fail(() => {
@@ -879,6 +877,47 @@ export class ResponseView {
       return url;
     });
   }
+
+  // uuuuv
+  resetStudentAttemps() {
+
+    const resubmitButton = $('.resubmit-button', this.element);
+
+    if (!resubmitButton) return;
+
+    const lmsHost = "http://localhost:18000"
+
+    resubmitButton.click(function (eventObject) {
+
+      const xBlockId = $(this).data('xblockid'); // block-v1:edX+E2E-101+course+type@openassessment+block@5b9e28f81af5476f869570ae69c50c08
+      const courseUrlName = xBlockId.match(/^block-v1:(.+)\+type@openassessment\+block@.+$/)[1];
+      const resetApi = `${lmsHost}/courses/course-v1:${courseUrlName}/instructor/api/reset_student_attempts`;
+
+      const formData = {
+        problem_to_reset: xBlockId,
+        unique_student_identifier: 'edx',
+        delete_module: true
+      }
+
+      $.ajax({
+        type: "POST",
+        url: resetApi,
+        data: formData,
+        success: submitNewSubmission
+      });
+    });
+
+    function submitNewSubmission() {
+      console.log("Started submitting new submission...")
+      const textInput = $('#submission-details-textarea', this.element).val();
+      const file = $('#file-upload-input', this.element).prop('files')[0];
+
+      if (!file) console.log("Missing file upload.")
+
+    }
+  };
+
+
 }
 
 export default ResponseView;

@@ -11,7 +11,6 @@ from openassessment.assessment.api.peer import get_assessments
 
 log = logging.getLogger(__name__)
 
-
 @login_required()
 def get_evaluations_for_student_item(request, course_id, student_id, item_id):  # pylint: disable=unused-argument
     """Retrieve all evaluations associated with the given student item.
@@ -53,3 +52,5 @@ def get_evaluations_for_student_item(request, course_id, student_id, item_id):  
         context["error"] = "The specified student item was not found."
 
     return render(request, 'evaluations.html', context)
+
+

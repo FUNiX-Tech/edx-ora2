@@ -1337,3 +1337,17 @@ class OpenAssessmentBlock(
         xblock_body["content_type"] = "ORA"
 
         return xblock_body
+
+    # uuuuv
+    @XBlock.json_handler
+    def clear_student_state_to_resubmit(self, data, suffix=''):
+        student_item = self.get_student_item_dict()
+
+        user_id = student_item['student_id']
+        course_id = student_item['course_id']
+        item_id = student_item['item_id']
+        requesting_user_id = student_item['student_id']
+
+        self.clear_student_state(user_id, course_id, item_id, requesting_user_id)
+
+        return "success"

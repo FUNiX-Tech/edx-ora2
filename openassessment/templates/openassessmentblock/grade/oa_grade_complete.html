@@ -108,14 +108,18 @@
             </div>
         </div>
     </li>
-
+    <h1>#########################################################</h1>
+    <h1>{{xblock_id}}</h1>
+    <h1>#########################################################</h1>
 {% if score %}
-    {% if score.points_earned == score.points_possible %}
+    {% if score.points_earned < score.points_possible %}
       <div id="resubmit" style="margin: 0 0 8px 0;">
         <p id="resubmit-button" onclick="showResubmitModal()">
           <strong>Resubmit Assignment</strong>
         </p >
       </div>
+
+
 
       <div id="resubmit-modal" style="display: block; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: #fff; z-index: 200;padding: 80px 20px 0px 20px;">
         <p onclick="closeResubmitModal()" style="margin: 0 0 30px 0; display: flex; align-items: center; gap: 10px; color: rgb(32, 21, 255);">
@@ -124,7 +128,9 @@
           </svg>
           <strong style="font-size: 16px;"><u>Go Back</u></strong>
         </p>
-
+        <h1>#########################################################</h1>
+        <h1>{{xblock_id}}</h1>
+        <h1>#########################################################</h1>
         <h2 style="height: 48px; font-size: 32px; color: #0b0b0b; margin: 0 0 48px 0;"><strong>Resubmit Assignment</strong></h2>
 
         <ol style="margin: 0 0 16px 16px; padding: 0 0 0 16px; font-size: 16px; color: #0b0b0b;">
@@ -195,7 +201,7 @@
 
         </div>
 
-        <button id="submit-button" class="disabled">
+        <button id="submit-button" class="disabled resubmit-button" data-xblockid="{{xblock_id}}">
           <strong>Submit</strong>
         </button>
 
