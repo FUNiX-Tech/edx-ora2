@@ -125,6 +125,9 @@ export class ResponseView {
     // Install a click handler for collapse/expand
     this.baseView.setUpCollapseExpand(sel);
 
+    // uuuuv
+    $('#resubmit-button', this.element).on('click', this.resetStudentAttemps.bind(this));
+
     // Install change handler for editor (to enable submission button)
     this.savedResponse = this.response();
     this.responseEditorController.setOnChangeListener(this.handleResponseChanged.bind(this));
@@ -879,6 +882,49 @@ export class ResponseView {
       return url;
     });
   }
+
+  // uuuuv
+  resetStudentAttemps() {
+    const view = this;
+
+    const lmsHost = "http://localhost:18000"
+
+    const xBlockId = $("#resubmit-button", this.element).data('xblockid'); // block-v1:edX+E2E-101+course+type@openassessment+block@5b9e28f81af5476f869570ae69c50c08
+    const courseUrlName = xBlockId.match(/^block-v1:(.+)\+type@openassessment\+block@.+$/)[1];
+    const resetApi = `${lmsHost}/courses/course-v1:${courseUrlName}/instructor/api/reset_student_attempts`;
+
+
+    view.server.getUsername().done(username => {
+      const formData = {
+        problem_to_reset: xBlockId,
+        unique_student_identifier: username,
+        delete_module: true
+      }
+
+      $.ajax({
+        type: "POST",
+        url: resetApi,
+        data: formData,
+        success: submitNewSubmission
+      });
+
+    }).fail(console.error)
+
+
+
+    function submitNewSubmission() {
+      console.log("Started submitting new submission...");
+      console.log("reset page");
+      // const { baseView } = view;
+      // const usageID = baseView.getUsageID();
+      // view.load(usageID);
+      // const textInput = $('#submission-details-textarea', this.element).val();
+      // const file = $('#file-upload-input', this.element).prop('files')[0];
+
+      // if (!file) console.log("Missing file upload.")
+      window.location.reload(false);
+    }
+  };
 }
 
 export default ResponseView;
